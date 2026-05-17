@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://iq4u4rrsrmmi"]
+
+[ext_resource type="Texture2D" uid="uid://b1bcqwlv4dcsx" path="res://assets/game_background_1.png" id="1_qms4h"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="MapBackground" type="Sprite2D" parent="."]
+position = Vector2(576, 324)
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("1_qms4h")
+
+[node name="SpawnPoints" type="Node2D" parent="."]
+
+[node name="Spawn1" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(-37, 296)
+
+[node name="Spawn2" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(1052, 675)
+
+[node name="Spawn3" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(833, -33)
