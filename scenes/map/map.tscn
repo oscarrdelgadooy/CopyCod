@@ -1,13 +1,61 @@
-[gd_scene load_steps=2 format=3 uid="uid://iq4u4rrsrmmi"]
+[gd_scene load_steps=3 format=3 uid="uid://iq4u4rrsrmmi"]
 
 [ext_resource type="Texture2D" uid="uid://b1bcqwlv4dcsx" path="res://assets/game_background_1.png" id="1_qms4h"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_acpl1"]
+size = Vector2(1153, 649)
+
 [node name="Node2D" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(577, 325)
 
 [node name="MapBackground" type="Sprite2D" parent="."]
 position = Vector2(576, 324)
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("1_qms4h")
+
+[node name="MapObstacles" type="StaticBody2D" parent="."]
+
+[node name="BorderMap" type="CollisionShape2D" parent="MapObstacles"]
+position = Vector2(576.5, 324.5)
+shape = SubResource("RectangleShape2D_acpl1")
+
+[node name="HouseCollision" type="CollisionPolygon2D" parent="MapObstacles"]
+polygon = PackedVector2Array(269, 176, 344, 136, 345, 65, 304, 30, 244, -1, 220, 0, 186, 62, 186, 129)
+
+[node name="UpperLeftRock" type="CollisionPolygon2D" parent="MapObstacles"]
+polygon = PackedVector2Array(1, 28, 28, 32, 77, 49, 86, 55, 98, 44, 115, 46, 128, 56, 149, 47, 166, 56, 169, 73, 147, 75, 131, 71, 117, 76, 109, 77, 110, 96, 118, 114, 130, 137, 137, 156, 165, 179, 150, 193, 130, 198, 125, 205, 115, 213, 101, 215, 81, 214, 51, 217, 29, 216, 1, 212)
+
+[node name="UpperRightRock" type="CollisionPolygon2D" parent="MapObstacles"]
+polygon = PackedVector2Array(1150, 110, 1143, 112, 1119, 112, 1110, 111, 1109, 102, 1117, 83, 1127, 70, 1136, 59, 1140, 53, 1147, 57, 1151, 49)
+
+[node name="UpperRightRock2" type="CollisionPolygon2D" parent="MapObstacles"]
+polygon = PackedVector2Array(1078, 34, 1070, 32, 1075, 25, 1082, 15, 1087, 11, 1099, 17, 1108, 22, 1120, 22, 1128, 33, 1122, 40, 1108, 37, 1099, 36)
+
+[node name="LavaUpper" type="CollisionPolygon2D" parent="MapObstacles"]
+polygon = PackedVector2Array(363, 84, 372, 75, 379, 68, 392, 64, 403, 55, 415, 52, 424, 52, 431, 51, 440, 40, 450, 39, 458, 42, 471, 45, 480, 50, 487, 51, 490, 58, 496, 65, 516, 70, 536, 72, 545, 76, 544, 84, 530, 82, 524, 86, 506, 88, 503, 96, 485, 104, 472, 112, 458, 115, 440, 114, 439, 106, 420, 106, 413, 102, 406, 97, 397, 97, 387, 97, 376, 88, 363, 89)
+
+[node name="LavaRiverUpper" type="CollisionPolygon2D" parent="MapObstacles"]
+polygon = PackedVector2Array(601, 1, 601, 124, 587, 147, 570, 162, 549, 167, 521, 169, 500, 172, 477, 180, 463, 190, 448, 201, 433, 213, 419, 231, 413, 240, 407, 252, 402, 272, 397, 287, 397, 294, 411, 288, 432, 287, 446, 285, 462, 287, 476, 293, 484, 276, 498, 261, 517, 249, 537, 246, 584, 240, 604, 227, 628, 214, 646, 194, 659, 175, 674, 149, 685, 122, 685, 122, 685, 122, 682, 100, 680, 71, 679, 0)
+
+[node name="LavaRiverDown" type="CollisionPolygon2D" parent="MapObstacles"]
+polygon = PackedVector2Array(392, 390, 381, 381, 415, 368, 449, 368, 475, 372, 480, 391, 473, 416, 475, 459, 470, 507, 454, 537, 443, 555, 427, 570, 410, 582, 394, 592, 378, 599, 368, 603, 336, 608, 305, 612, 290, 620, 274, 635, 274, 640, 271, 648, 188, 649, 191, 635, 196, 617, 201, 605, 209, 586, 229, 564, 253, 547, 278, 535, 301, 527, 322, 524, 347, 524, 362, 522, 384, 510, 391, 494, 393, 477, 396, 456, 398, 438)
+
+[node name="LavaRiverRight" type="CollisionPolygon2D" parent="MapObstacles"]
+polygon = PackedVector2Array(975, 50, 986, 58, 1001, 65, 1012, 80, 999, 93, 981, 105, 966, 116, 956, 135, 955, 152, 974, 160, 988, 169, 1009, 174, 1032, 181, 1043, 188, 1058, 203, 1078, 215, 1089, 218, 1064, 238, 1047, 254, 1014, 262, 997, 274, 969, 287, 946, 294, 932, 309, 912, 329, 902, 340, 909, 350, 924, 360, 964, 379, 996, 394, 1012, 407, 1034, 424, 1064, 438, 1081, 445, 1098, 458, 1116, 470, 1123, 479, 1153, 148, 1089, 161, 1056, 155, 1032, 138, 1006, 121, 1010, 110, 1040, 89, 1052, 74, 1051, 58, 1030, 40, 999, 32, 982, 26, 964, 24, 956, 25, 967, 34)
+
+[node name="DownLeftRock" type="CollisionPolygon2D" parent="MapObstacles"]
+polygon = PackedVector2Array(1, 376, 8, 385, 15, 394, 22, 406, 27, 428, 32, 447, 37, 477, 43, 489, 50, 479, 68, 487, 75, 500, 81, 519, 78, 543, 68, 541, 53, 536, 37, 541, 23, 544, 8, 542, 3, 543)
+
+[node name="DownLeftRock2" type="CollisionPolygon2D" parent="MapObstacles"]
+polygon = PackedVector2Array(111, 584, 94, 582, 82, 582, 68, 585, 50, 587, 33, 584, 32, 572, 38, 565, 47, 560, 61, 556, 76, 563, 84, 570, 91, 563, 110, 562, 116, 569)
+
+[node name="DownLeftRock4" type="CollisionPolygon2D" parent="MapObstacles"]
+polygon = PackedVector2Array(460, 631, 483, 631, 502, 630, 534, 637, 558, 629, 575, 631, 588, 635, 612, 627, 637, 629, 644, 622, 646, 611, 643, 599, 638, 586, 615, 567, 606, 581, 605, 571, 595, 549, 587, 498, 581, 480, 569, 464, 556, 464, 550, 479, 541, 497, 531, 518, 514, 542, 506, 568, 496, 588, 487, 576, 476, 591, 465, 610, 453, 628)
+
+[node name="DownLeftHouse" type="CollisionPolygon2D" parent="MapObstacles"]
+polygon = PackedVector2Array(76, 474, 149, 517, 223, 482, 224, 454, 216, 444, 198, 440, 189, 441, 177, 441, 169, 438, 165, 431, 163, 425, 153, 420, 149, 419, 142, 420, 133, 426, 133, 432, 127, 440, 117, 435, 101, 444, 75, 464)
 
 [node name="SpawnPoints" type="Node2D" parent="."]
 

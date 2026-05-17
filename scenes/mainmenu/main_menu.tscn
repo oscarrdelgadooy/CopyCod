@@ -22,10 +22,8 @@ texture = ExtResource("1_ksc5d")
 
 [node name="BlurEffect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_4kk2f")
-offset_left = 6.0
-offset_top = -49.0
-offset_right = 1158.0
-offset_bottom = 599.0
+offset_right = 1152.0
+offset_bottom = 648.0
 
 [node name="MenuButtons" type="VBoxContainer" parent="."]
 offset_left = 240.0
