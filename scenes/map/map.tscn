@@ -1,14 +1,26 @@
-[gd_scene load_steps=3 format=3 uid="uid://iq4u4rrsrmmi"]
+[gd_scene load_steps=4 format=3 uid="uid://iq4u4rrsrmmi"]
 
 [ext_resource type="Texture2D" uid="uid://b1bcqwlv4dcsx" path="res://assets/game_background_1.png" id="1_qms4h"]
+[ext_resource type="PackedScene" uid="uid://cswj4w2trxjat" path="res://player/player.tscn" id="2_tpqal"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_acpl1"]
-size = Vector2(1153, 649)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o3rex"]
+size = Vector2(0, 648)
 
 [node name="Node2D" type="Node2D"]
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(577, 325)
+position = Vector2(576, 324)
+
+[node name="SpawnPoints" type="Node2D" parent="."]
+
+[node name="Spawn1" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(-37, 296)
+
+[node name="Spawn2" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(1052, 675)
+
+[node name="Spawn3" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(833, -33)
 
 [node name="MapBackground" type="Sprite2D" parent="."]
 position = Vector2(576, 324)
@@ -16,10 +28,6 @@ scale = Vector2(0.6, 0.6)
 texture = ExtResource("1_qms4h")
 
 [node name="MapObstacles" type="StaticBody2D" parent="."]
-
-[node name="BorderMap" type="CollisionShape2D" parent="MapObstacles"]
-position = Vector2(576.5, 324.5)
-shape = SubResource("RectangleShape2D_acpl1")
 
 [node name="HouseCollision" type="CollisionPolygon2D" parent="MapObstacles"]
 polygon = PackedVector2Array(269, 176, 344, 136, 345, 65, 304, 30, 244, -1, 220, 0, 186, 62, 186, 129)
@@ -33,11 +41,8 @@ polygon = PackedVector2Array(1150, 110, 1143, 112, 1119, 112, 1110, 111, 1109, 1
 [node name="UpperRightRock2" type="CollisionPolygon2D" parent="MapObstacles"]
 polygon = PackedVector2Array(1078, 34, 1070, 32, 1075, 25, 1082, 15, 1087, 11, 1099, 17, 1108, 22, 1120, 22, 1128, 33, 1122, 40, 1108, 37, 1099, 36)
 
-[node name="LavaUpper" type="CollisionPolygon2D" parent="MapObstacles"]
-polygon = PackedVector2Array(363, 84, 372, 75, 379, 68, 392, 64, 403, 55, 415, 52, 424, 52, 431, 51, 440, 40, 450, 39, 458, 42, 471, 45, 480, 50, 487, 51, 490, 58, 496, 65, 516, 70, 536, 72, 545, 76, 544, 84, 530, 82, 524, 86, 506, 88, 503, 96, 485, 104, 472, 112, 458, 115, 440, 114, 439, 106, 420, 106, 413, 102, 406, 97, 397, 97, 387, 97, 376, 88, 363, 89)
-
 [node name="LavaRiverUpper" type="CollisionPolygon2D" parent="MapObstacles"]
-polygon = PackedVector2Array(601, 1, 601, 124, 587, 147, 570, 162, 549, 167, 521, 169, 500, 172, 477, 180, 463, 190, 448, 201, 433, 213, 419, 231, 413, 240, 407, 252, 402, 272, 397, 287, 397, 294, 411, 288, 432, 287, 446, 285, 462, 287, 476, 293, 484, 276, 498, 261, 517, 249, 537, 246, 584, 240, 604, 227, 628, 214, 646, 194, 659, 175, 674, 149, 685, 122, 685, 122, 685, 122, 682, 100, 680, 71, 679, 0)
+polygon = PackedVector2Array(601, 1, 601, 124, 587, 147, 570, 162, 549, 167, 521, 169, 500, 172, 477, 180, 463, 190, 448, 201, 433, 213, 419, 231, 413, 240, 407, 252, 402, 272, 397, 287, 397, 294, 411, 288, 432, 287, 446, 285, 462, 287, 476, 293, 484, 276, 498, 261, 517, 249, 537, 246, 584, 240, 604, 227, 628, 214, 646, 194, 659, 175, 674, 149, 676, 121, 679, 65, 672, 117, 674, 98, 676, 1)
 
 [node name="LavaRiverDown" type="CollisionPolygon2D" parent="MapObstacles"]
 polygon = PackedVector2Array(392, 390, 381, 381, 415, 368, 449, 368, 475, 372, 480, 391, 473, 416, 475, 459, 470, 507, 454, 537, 443, 555, 427, 570, 410, 582, 394, 592, 378, 599, 368, 603, 336, 608, 305, 612, 290, 620, 274, 635, 274, 640, 271, 648, 188, 649, 191, 635, 196, 617, 201, 605, 209, 586, 229, 564, 253, 547, 278, 535, 301, 527, 322, 524, 347, 524, 362, 522, 384, 510, 391, 494, 393, 477, 396, 456, 398, 438)
@@ -57,13 +62,27 @@ polygon = PackedVector2Array(460, 631, 483, 631, 502, 630, 534, 637, 558, 629, 5
 [node name="DownLeftHouse" type="CollisionPolygon2D" parent="MapObstacles"]
 polygon = PackedVector2Array(76, 474, 149, 517, 223, 482, 224, 454, 216, 444, 198, 440, 189, 441, 177, 441, 169, 438, 165, 431, 163, 425, 153, 420, 149, 419, 142, 420, 133, 426, 133, 432, 127, 440, 117, 435, 101, 444, 75, 464)
 
-[node name="SpawnPoints" type="Node2D" parent="."]
+[node name="WallMap" type="StaticBody2D" parent="MapObstacles"]
 
-[node name="Spawn1" type="Marker2D" parent="SpawnPoints"]
-position = Vector2(-37, 296)
+[node name="North" type="CollisionShape2D" parent="MapObstacles/WallMap"]
+position = Vector2(576, 0)
+rotation = 1.5708
+scale = Vector2(2, 2)
+shape = SubResource("RectangleShape2D_o3rex")
 
-[node name="Spawn2" type="Marker2D" parent="SpawnPoints"]
-position = Vector2(1052, 675)
+[node name="West" type="CollisionShape2D" parent="MapObstacles/WallMap"]
+position = Vector2(0, 324)
+shape = SubResource("RectangleShape2D_o3rex")
 
-[node name="Spawn3" type="Marker2D" parent="SpawnPoints"]
-position = Vector2(833, -33)
+[node name="South" type="CollisionShape2D" parent="MapObstacles/WallMap"]
+position = Vector2(576, 648)
+rotation = 1.5708
+scale = Vector2(2, 2)
+shape = SubResource("RectangleShape2D_o3rex")
+
+[node name="East" type="CollisionShape2D" parent="MapObstacles/WallMap"]
+position = Vector2(1152, 324)
+shape = SubResource("RectangleShape2D_o3rex")
+
+[node name="Player" parent="." instance=ExtResource("2_tpqal")]
+position = Vector2(576, 324)

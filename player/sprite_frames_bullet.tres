@@ -1,0 +1,39 @@
+[gd_resource type="SpriteFrames" load_steps=6 format=3 uid="uid://c6el0j731upo2"]
+
+[ext_resource type="Texture2D" uid="uid://byiqoc3vkng83" path="res://player/All_Fire_Bullet_Pixel_16x16.png" id="1_3t4cq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jui04"]
+atlas = ExtResource("1_3t4cq")
+region = Rect2(288, 140, 16, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sb6a5"]
+atlas = ExtResource("1_3t4cq")
+region = Rect2(304, 140, 16, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lsyrd"]
+atlas = ExtResource("1_3t4cq")
+region = Rect2(272, 140, 16, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tbr7k"]
+atlas = ExtResource("1_3t4cq")
+region = Rect2(256, 140, 16, 14)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jui04")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sb6a5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lsyrd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tbr7k")
+}],
+"loop": true,
+"name": &"bullet",
+"speed": 20.0
+}]

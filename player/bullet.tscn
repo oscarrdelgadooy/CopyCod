@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://c0vbib0na4klu"]
+
+[ext_resource type="Script" path="res://player/bullet.gd" id="1_22apw"]
+[ext_resource type="SpriteFrames" uid="uid://c6el0j731upo2" path="res://player/sprite_frames_bullet.tres" id="1_cas44"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lpsk5"]
+size = Vector2(17, 6)
+
+[node name="Bullet" type="Area2D"]
+script = ExtResource("1_22apw")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("1_cas44")
+animation = &"bullet"
+frame_progress = 0.683729
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0.5, 5)
+shape = SubResource("RectangleShape2D_lpsk5")
