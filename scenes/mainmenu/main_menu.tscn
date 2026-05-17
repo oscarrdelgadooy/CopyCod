@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://cw5n4luykyuaa"]
+
+[ext_resource type="Texture2D" uid="uid://b1bcqwlv4dcsx" path="res://assets/game_background_1.png" id="1_ksc5d"]
+[ext_resource type="Shader" path="res://scenes/mainmenu/main_menu.gdshader" id="2_mpg67"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4kk2f"]
+shader = ExtResource("2_mpg67")
+shader_parameter/blur_amount = 2.5
+
+[node name="MainMenu" type="Node2D"]
+
+[node name="MapBackground" type="Sprite2D" parent="."]
+position = Vector2(576, 324)
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("1_ksc5d")
+
+[node name="BlurEffect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_4kk2f")
+offset_right = 1152.0
+offset_bottom = 648.0
