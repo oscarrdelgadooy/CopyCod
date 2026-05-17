@@ -1,3 +1,10 @@
-[gd_scene format=3 uid="uid://cswj4w2trxjat"]
+[gd_scene load_steps=2 format=3 uid="uid://cswj4w2trxjat"]
+
+[ext_resource type="SpriteFrames" uid="uid://drnpvf6b3jp7l" path="res://player/sprite_frames_player.tres" id="1_8kywk"]
 
 [node name="Player" type="CharacterBody2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("1_8kywk")
+animation = &"run"
+frame_progress = 0.759788
