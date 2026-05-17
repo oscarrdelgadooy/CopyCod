@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://cw5n4luykyuaa"]
+[gd_scene load_steps=4 format=3 uid="uid://cg6rsopsx2m72"]
 
 [ext_resource type="Texture2D" uid="uid://b1bcqwlv4dcsx" path="res://assets/game_background_1.png" id="1_ksc5d"]
 [ext_resource type="Shader" path="res://scenes/mainmenu/main_menu.gdshader" id="2_mpg67"]
@@ -18,3 +18,33 @@ texture = ExtResource("1_ksc5d")
 material = SubResource("ShaderMaterial_4kk2f")
 offset_right = 1152.0
 offset_bottom = 648.0
+
+[node name="MenuButtons" type="VBoxContainer" parent="."]
+offset_left = 240.0
+offset_top = 60.0
+offset_right = 884.0
+offset_bottom = 403.0
+theme_override_constants/separation = 25
+
+[node name="GameTitle" type="Label" parent="MenuButtons"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "DUNGEON SURVIVAL"
+horizontal_alignment = 1
+
+[node name="OptionDifficulty" type="OptionButton" parent="MenuButtons"]
+custom_minimum_size = Vector2(350, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+
+[node name="BtnPlay" type="Button" parent="MenuButtons"]
+custom_minimum_size = Vector2(350, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "EMPEZAR PARTIDA"
+
+[node name="BtnExit" type="Button" parent="MenuButtons"]
+custom_minimum_size = Vector2(350, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "SALIR DEL JUEGO"
