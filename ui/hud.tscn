@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://ui/hud.gd" id="1_l4qoo"]
 
 [node name="Hud" type="CanvasLayer"]
+process_mode = 3
 script = ExtResource("1_l4qoo")
 
 [node name="Interfaz" type="Control" parent="."]
@@ -44,3 +45,23 @@ offset_top = 30.0
 offset_right = 596.0
 offset_bottom = 53.0
 text = "RONDA: 1"
+
+[node name="GameOverPanel" type="Panel" parent="Interfaz"]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TextGameOver" type="Label" parent="Interfaz/GameOverPanel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "--- GAME OVER ---"
+
+[node name="Button" type="Button" parent="Interfaz/GameOverPanel"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Volver al menú."
+
+[connection signal="pressed" from="Interfaz/GameOverPanel/Button" to="." method="_on_button_pressed"]
