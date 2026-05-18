@@ -1,9 +1,9 @@
 extends CharacterBody2D
 
 # --- VARIABLES CONFIGURABLES ---
-@export var speed: float = 120.0      # Más lento que el jugador para que puedas huir
+@export var speed: float = 60.0      # Más lento que el jugador para que puedas huir
 @export var health: int = 1          # Muere de 1 tiro (puedes subirlo en el Inspector)
-@export var damage_amount: int = 15   # Cuánta vida le quita al jugador por mordisco
+@export var damage_amount: int = 5   # Cuánta vida le quita al jugador por mordisco
 @export var attack_cooldown: float = 1.0 # Tiempo entre mordiscos (en segundos)
 
 # --- VARIABLES DE ESTADO INTERNO ---
@@ -69,18 +69,23 @@ func take_damage(amount: int) -> void:
 
 func die() -> void:
 	is_dead = true
-	velocity = Vector2.ZERO # Parar al zombi en el sitio
+	velocity = Vector2.ZERO # Frenazo total del zombi
 	
-	# Desactivamos colisiones para que las balas y el jugador pasen por encima de su cadáver
-	$CollisionShape2D.queue_free()
-	hitbox.queue_free()
+	# 🛡️ CONTROL DE SEGURIDAD 1: Solo borramos la colisión si existe en el árbol
+	if has_node("CollisionShape2D"):
+		$CollisionShape2D.queue_free()
 	
-	print("¡Zombi eliminado!")
-	if sprite:
-		sprite.play("dead")
+	# 🛡️ CONTROL DE SEGURIDAD 2: Solo borramos la hitbox si no es nula
+	if hitbox:
+		hitbox.queue_free()
 		
-	# Esperar 3 segundos enseñando el cadáver y luego borrarlo para no saturar memoria
-	await get_tree().create_timer(3.0).timeout
+	print("¡Zombi eliminado!")
+	
+	# 🛡️ CONTROL DE SEGURIDAD 3: Comprobamos qué nombre tiene tu animación de muerte
+	if sprite:
+			sprite.play("dead")
+	# Esperar 1 segundo enseñando el cadáver y luego borrarlo de la memoria
+	await get_tree().create_timer(0.8).timeout
 	queue_free()
 
 # --- COMPROBAR SI PUEDE MORDER ---
