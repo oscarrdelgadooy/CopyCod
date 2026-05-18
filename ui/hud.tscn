@@ -1,0 +1,46 @@
+[gd_scene load_steps=2 format=3 uid="uid://bvjf36s62h6qm"]
+
+[ext_resource type="Script" path="res://ui/hud.gd" id="1_l4qoo"]
+
+[node name="Hud" type="CanvasLayer"]
+script = ExtResource("1_l4qoo")
+
+[node name="Interfaz" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LabelVida" type="Label" parent="Interfaz"]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 30.0
+offset_right = 104.0
+offset_bottom = 53.0
+text = "VIDA: 100"
+
+[node name="LabelMonedas" type="Label" parent="Interfaz"]
+layout_mode = 0
+offset_left = 980.0
+offset_top = 30.0
+offset_right = 1078.0
+offset_bottom = 53.0
+text = "MONEDAS: 0"
+
+[node name="LabelMunicion" type="Label" parent="Interfaz"]
+layout_mode = 0
+offset_left = 960.0
+offset_top = 590.0
+offset_right = 1055.0
+offset_bottom = 613.0
+text = "BALAS: 6/Ꝏ"
+
+[node name="LabelRonda" type="Label" parent="Interfaz"]
+layout_mode = 0
+offset_left = 520.0
+offset_top = 30.0
+offset_right = 596.0
+offset_bottom = 53.0
+text = "RONDA: 1"
