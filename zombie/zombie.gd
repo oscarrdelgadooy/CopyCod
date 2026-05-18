@@ -71,6 +71,10 @@ func die() -> void:
 	is_dead = true
 	velocity = Vector2.ZERO # Frenazo total para que no siga caminando muerto
 	
+	var manager = get_tree().current_scene.find_child("WaveManager", true, false)
+	if manager:
+		manager.zombie_killed()
+	
 	# 💰 RECOMPENSA DIRECTA: Si tenemos al jugador localizado, le sumamos las monedas
 	if player:
 		# Le damos 2 monedas por baja (puedes cambiarlo por el número que quieras)
