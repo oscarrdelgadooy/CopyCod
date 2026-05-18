@@ -1,9 +1,9 @@
 extends CharacterBody2D
 
 # --- VARIABLES CONFIGURABLES ---
-@export var speed: float = 60.0      # Más lento que el jugador para que puedas huir
+@export var speed: float = 90.0      # Más lento que el jugador para que puedas huir
 @export var health: int = 1          # Muere de 1 tiro (puedes subirlo en el Inspector)
-@export var damage_amount: int = 5   # Cuánta vida le quita al jugador por mordisco
+@export var damage_amount: int = 2   # Cuánta vida le quita al jugador por mordisco
 @export var attack_cooldown: float = 1.0 # Tiempo entre mordiscos (en segundos)
 
 # --- VARIABLES DE ESTADO INTERNO ---
