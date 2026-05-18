@@ -10,7 +10,7 @@ extends CharacterBody2D
 var player: CharacterBody2D = null
 var is_dead: bool = false
 var attack_timer: float = 0.0
-
+var coins: int = 0 # El dinero actual del jugador para gastar en el mercader
 # --- REFERENCIAS A NODOS ---
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var hitbox: Area2D = $Hitbox
