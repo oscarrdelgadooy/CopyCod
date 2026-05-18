@@ -1,4 +1,4 @@
-[gd_scene load_steps=55 format=3 uid="uid://b13uh5vwf7u3s"]
+[gd_scene load_steps=57 format=3 uid="uid://b13uh5vwf7u3s"]
 
 [ext_resource type="Texture2D" uid="uid://dqtdnliilutks" path="res://mercader/Trader_1/Approval.png" id="1_27ca4"]
 [ext_resource type="Texture2D" uid="uid://dobfdewc4r0ro" path="res://mercader/Trader_1/Dialogue.png" id="2_h36ec"]
@@ -370,6 +370,12 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n2jsm"]
+size = Vector2(41, 81)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_35hj0"]
+radius = 126.004
+
 [node name="Mercader" type="StaticBody2D"]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -380,5 +386,11 @@ frame = 7
 frame_progress = 0.507227
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-10.5, 29.5)
+shape = SubResource("RectangleShape2D_n2jsm")
 
 [node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(-12, 26)
+shape = SubResource("CircleShape2D_35hj0")
