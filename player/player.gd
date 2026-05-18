@@ -6,6 +6,7 @@ extends CharacterBody2D
 @export var reload_time: float = 1.5
 @export var shoot_cooldown: float = 0.25
 @export var bullet_scene: PackedScene
+@export var bullet_spawn_distance: float = 35.0
 
 # --- VARIABLES DE ESTADO INTERNO ---
 var current_health: int = max_health
@@ -25,7 +26,7 @@ func _ready() -> void:
 	current_ammo = MAX_AMMO
 	if sprite:
 		sprite.play("idle")
-		sprite.rotation = 0 # Nos aseguramos de que el sprite esté completamente recto
+		sprite.rotation = 0
 
 func _physics_process(delta: float) -> void:
 	if is_dead:
@@ -61,30 +62,26 @@ func _physics_process(delta: float) -> void:
 
 	# 3. CONTROL DEL GIRO (FLIP) DEL SPRITE
 	if not is_hurting and sprite:
-		# El personaje mantiene siempre su rotación en 0 (recto)
-		sprite.rotation = 0
-		
-		# Prioridad 1: Si está disparando, se gira hacia donde dispara
-		if shoot_dir != Vector2.ZERO:
+		# Prioridad 1: Si dispara (y no está recargando), gira hacia las flechas
+		if shoot_dir != Vector2.ZERO and not is_reloading:
 			if shoot_dir.x > 0:
-				sprite.flip_h = false # Mira a la derecha (normal)
+				sprite.flip_h = false
 			elif shoot_dir.x < 0:
-				sprite.flip_h = true  # Espejo a la izquierda
+				sprite.flip_h = true
 			
-			# Ejecutar el disparo pasando la dirección de la flecha
 			if shoot_timer <= 0.0:
 				shoot(shoot_dir)
 				shoot_timer = shoot_cooldown
 				
-		# Prioridad 2: Si no dispara pero se mueve, se gira hacia donde camina
+		# Prioridad 2: Si camina (o si está recargando y moviéndose), gira hacia el movimiento
 		elif direction != Vector2.ZERO:
 			if direction.x > 0:
-				sprite.flip_h = false # Mira a la derecha
+				sprite.flip_h = false
 			elif direction.x < 0:
-				sprite.flip_h = true  # Mira a la izquierda
+				sprite.flip_h = true
 
-	# 4. ACTUALIZAR ANIMACIÓN
-	update_animations(direction)
+	# 4. ENVIAR LOS DATOS A LA MÁQUINA DE ANIMACIONES
+	update_animations(direction, shoot_dir)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if is_dead:
@@ -106,8 +103,9 @@ func shoot(dir: Vector2) -> void:
 
 	if bullet_scene:
 		var bullet = bullet_scene.instantiate()
-		bullet.global_position = global_position
-		# ¡Importante! La bala sale en la dirección de la flecha pulsada (dir.angle())
+		
+		# Aplicamos el cálculo final con el ajuste personalizado de este frame
+		bullet.global_position = global_position + Vector2(0, 32) + (dir * bullet_spawn_distance)
 		bullet.global_rotation = dir.angle() 
 		get_tree().current_scene.add_child(bullet)
 
@@ -118,7 +116,10 @@ func start_reload() -> void:
 		
 	is_reloading = true
 	print("Recargando...")
+	
+	# El cambio de animación a "reload" ocurre automáticamente gracias a update_animations()
 	await get_tree().create_timer(reload_time).timeout
+	
 	current_ammo = MAX_AMMO
 	is_reloading = false
 	print("¡Recargado!")
@@ -144,14 +145,35 @@ func die() -> void:
 	velocity = Vector2.ZERO
 	print("--- MUERTO ---")
 	if sprite:
-		sprite.play("death")
+		sprite.play("dead")
 
-# --- ACTUALIZAR ANIMACIONES ---
-func update_animations(direction: Vector2) -> void:
-	if is_dead or is_hurting:
+# --- MÁQUINA DE ESTADOS VISUAL (Jerarquía Definitiva) ---
+# --- MÁQUINA DE ESTADOS VISUAL (Solo este bloque modificado) ---
+func update_animations(direction: Vector2, shoot_dir: Vector2) -> void:
+	if not sprite:
 		return
-	if sprite:
-		if direction != Vector2.ZERO:
-			sprite.play("walk")
-		else:
-			sprite.play("idle")
+
+	# 1. Muerte (Prioridad máxima)
+	if is_dead:
+		if sprite.animation != "dead":
+			sprite.play("dead")
+		return
+		
+	# 2. Daño / Dolor
+	if is_hurting:
+		return
+
+	# 3. RESTICCIÓN DE RECARGA: Si está recargando, se muestra 'reload' obligatoriamente
+	# e ignoramos por completo cualquier intento de disparo ('shoot') o carrera ('run')
+	if is_reloading:
+		if sprite.animation != "reload":
+			sprite.play("reload")
+		return
+
+	# 4. Estados de acción comunes (Solo si NO está recargando)
+	if shoot_dir != Vector2.ZERO:
+		sprite.play("shoot")
+	elif direction != Vector2.ZERO:
+		sprite.play("run")
+	else:
+		sprite.play("idle")

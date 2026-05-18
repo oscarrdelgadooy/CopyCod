@@ -17,5 +17,4 @@ shape = SubResource("RectangleShape2D_acrht")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("1_8kywk")
-animation = &"run"
-frame_progress = 0.526054
+animation = &"reload"

@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://6yy1txggadeg"]
+
+[ext_resource type="Script" path="res://zombie/zombie.gd" id="1_00hs2"]
+
+[node name="Zombie" type="Node2D"]
+script = ExtResource("1_00hs2")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]

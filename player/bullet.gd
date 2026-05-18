@@ -1,7 +1,7 @@
 extends Area2D
 
-@export var speed: float = 600.0
-@export var lifetime: float = 2.0
+@export var speed: float = 700.0
+@export var lifetime: float = 5.0
 
 func _ready() -> void:
 	# Crear un temporizador para que la bala se limpie sola si no toca nada
@@ -12,7 +12,6 @@ func _physics_process(delta: float) -> void:
 	# En Godot, Vector2.RIGHT (1, 0) es la dirección "hacia adelante".
 	# Al multiplicarlo por la rotación del objeto, viaja recto hacia donde apunta.
 	position += Vector2.RIGHT.rotated(rotation) * speed * delta
-
 	# Conectar el choque con los muros del mapa PNG
 	# Nota: Más adelante añadiremos aquí la lógica para hacer daño a los zombis
 	var bodies = get_overlapping_bodies()
