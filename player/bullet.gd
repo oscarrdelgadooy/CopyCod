@@ -4,17 +4,27 @@ extends Area2D
 @export var lifetime: float = 5.0
 
 func _ready() -> void:
-	# Crear un temporizador para que la bala se limpie sola si no toca nada
 	await get_tree().create_timer(lifetime).timeout
-	queue_free() # Borra la bala del juego de forma segura
+	queue_free()
 
 func _physics_process(delta: float) -> void:
-	# En Godot, Vector2.RIGHT (1, 0) es la dirección "hacia adelante".
-	# Al multiplicarlo por la rotación del objeto, viaja recto hacia donde apunta.
+	# Mover la bala hacia adelante
 	position += Vector2.RIGHT.rotated(rotation) * speed * delta
-	# Conectar el choque con los muros del mapa PNG
-	# Nota: Más adelante añadiremos aquí la lógica para hacer daño a los zombis
+
+	# Detectar impactos
 	var bodies = get_overlapping_bodies()
 	for body in bodies:
-		if body.name == "MapObstacles": # Si choca contra las colisiones invisibles del mapa
-			queue_free() # La bala desaparece al impactar con el muro
+		# Si choca contra el jugador, la bala lo ignora (para no autolesionarse)
+		if body.name == "Player":
+			continue
+			
+		# SI EL CUERPO TIENE LA FUNCIÓN 'take_damage' (como el Zombi), LE PEGAMOS UN TIRO
+		if body.has_method("take_damage"):
+			body.take_damage(1) # Le quita 1 de vida (el zombi tiene 1 por defecto)
+			queue_free()        # La bala desaparece al impactar
+			break
+			
+		# Si choca contra las colisiones invisibles del mapa PNG
+		elif body.name == "MurosInvisibles":
+			queue_free()
+			break
