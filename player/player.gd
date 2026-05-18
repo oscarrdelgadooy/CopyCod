@@ -12,6 +12,7 @@ extends CharacterBody2D
 var current_health: int = max_health
 var current_ammo: int = 8
 const MAX_AMMO: int = 8
+var coins: int = 0
 
 var is_reloading: bool = false
 var is_dead: bool = false

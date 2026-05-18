@@ -69,22 +69,24 @@ func take_damage(amount: int) -> void:
 
 func die() -> void:
 	is_dead = true
-	velocity = Vector2.ZERO # Frenazo total del zombi
+	velocity = Vector2.ZERO # Frenazo total para que no siga caminando muerto
 	
-	# 🛡️ CONTROL DE SEGURIDAD 1: Solo borramos la colisión si existe en el árbol
+	# 💰 RECOMPENSA DIRECTA: Si tenemos al jugador localizado, le sumamos las monedas
+	if player:
+		# Le damos 2 monedas por baja (puedes cambiarlo por el número que quieras)
+		player.coins += 2 
+		print("¡Zombi eliminado! +2 Monedas. Cartera del jugador: ", player.coins)
+	
+	# Desactivamos colisiones de forma segura si existen
 	if has_node("CollisionShape2D"):
 		$CollisionShape2D.queue_free()
-	
-	# 🛡️ CONTROL DE SEGURIDAD 2: Solo borramos la hitbox si no es nula
 	if hitbox:
 		hitbox.queue_free()
 		
-	print("¡Zombi eliminado!")
-	
-	# 🛡️ CONTROL DE SEGURIDAD 3: Comprobamos qué nombre tiene tu animación de muerte
+	# Animación de muerte
 	if sprite:
-			sprite.play("dead")
-	# Esperar 1 segundo enseñando el cadáver y luego borrarlo de la memoria
+		sprite.play("dead")
+	# Esperar 0.8 segundos enseñando el cadáver antes de borrarlo
 	await get_tree().create_timer(0.8).timeout
 	queue_free()
 

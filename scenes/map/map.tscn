@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://iq4u4rrsrmmi"]
+[gd_scene load_steps=7 format=3 uid="uid://iq4u4rrsrmmi"]
 
 [ext_resource type="Texture2D" uid="uid://b1bcqwlv4dcsx" path="res://assets/game_background_1.png" id="1_qms4h"]
 [ext_resource type="PackedScene" uid="uid://cswj4w2trxjat" path="res://player/player.tscn" id="2_tpqal"]
 [ext_resource type="PackedScene" uid="uid://6yy1txggadeg" path="res://zombie/zombie.tscn" id="3_sb8fs"]
 [ext_resource type="PackedScene" uid="uid://bldgm7omcxuqb" path="res://zombie/zombie_fast.tscn" id="4_2y6dg"]
+[ext_resource type="Script" path="res://scenes/map/wave_manager.gd" id="5_tbdxw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o3rex"]
 size = Vector2(0, 648)
@@ -94,3 +95,6 @@ position = Vector2(1108, 563)
 
 [node name="ZombieFast" parent="." instance=ExtResource("4_2y6dg")]
 position = Vector2(387, 99)
+
+[node name="WaveManager" type="Node2D" parent="."]
+script = ExtResource("5_tbdxw")
