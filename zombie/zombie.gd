@@ -93,19 +93,22 @@ func die() -> void:
 	is_dead = true
 	velocity = Vector2.ZERO
 	
+	# Soltamos al jugador si lo teníamos agarrado
 	if is_currently_grabbing and player and player.is_grabbed:
 		player.is_grabbed = false
 	
-	var manager = get_tree().current_scene.find_child("WaveManager", true, false)
-	if manager: manager.zombie_killed()
+	# Damos las monedas
+	if player: 
+		player.coins += 2 
 	
-	if player: player.coins += 2 
-	
+	# Borramos las colisiones para que no estorben en el suelo
 	if has_node("CollisionShape2D"): $CollisionShape2D.queue_free()
 	if hitbox: hitbox.queue_free()
 		
+	# Reproducimos animación de muerte
 	if sprite and sprite.sprite_frames.has_animation("dead"):
 		sprite.play("dead")
 		
+	# Esperamos un poco y nos borramos (el Wave Manager lo detectará automáticamente)
 	await get_tree().create_timer(0.8).timeout
 	queue_free()

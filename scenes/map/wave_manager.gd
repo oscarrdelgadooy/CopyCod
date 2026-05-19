@@ -1,7 +1,7 @@
 extends Node
 
-@export var zombie_scene: PackedScene  # Arrastra aquí tu .tscn de Zombi desde el Inspector
-@export var tiempo_compra: float = 30.0 # Tiempo que se queda el mercader (30 segundos)
+@export var zombie_scene: PackedScene  # Arrastra aquí tu zombie.tscn
+@export var zombie_rapido_scene: PackedScene  # Arrastra aquí tu zombie_fast.tscn@export var tiempo_compra: float = 30.0 # Tiempo que se queda el mercader (30 segundos)
 
 @onready var spawn_timer = $SpawnTimer
 @onready var prep_timer = $PrepTimer
@@ -61,18 +61,32 @@ func _on_spawn_timer_timeout():
 		spawn_timer.stop() # Ya han salido todos los zombis programados
 
 func spawn_un_zombi():
-	if zombie_scene:
-		var zombi = zombie_scene.instantiate()
+	# Comprobamos que al menos la escena normal esté asignada
+	if not zombie_scene:
+		return
 		
-		# AQUÍ: Dale una posición de spawn (puedes usar marcadores o posiciones fijas)
-		# zombi.global_position = Vector2(500, 400) 
+	var zombi: CharacterBody2D = null
+	
+	# Generamos un número aleatorio entre 0 y 100
+	var probabilidad = randf_range(0, 100)
+	
+	# Si sale más de 70 y tenemos configurado el zombi rápido, lo spawneamos
+	if probabilidad > 70.0 and zombie_rapido_scene:
+		zombi = zombie_rapido_scene.instantiate()
+	else:
+		zombi = zombie_scene.instantiate()
 		
-		get_tree().current_scene.add_child(zombi)
-		zombies_vivos += 1
+	# --- POSICIONAMIENTO (Cerca del jugador para testear) ---
+	var player = get_tree().current_scene.find_child("Player", true, false)
+	if player:
+		zombi.global_position = player.global_position + Vector2(300, randf_range(-100, 100))
+	else:
+		zombi.global_position = Vector2(500, 400)
 		
-		# Vinculamos la muerte del zombi para saber cuándo el mapa se queda limpio.
-		# Usamos 'tree_exited' que se activa automáticamente cuando haces queue_free() en el zombi.
-		zombi.tree_exited.connect(_on_zombi_destruido)
+	# Lo añadimos al juego y conectamos su muerte
+	get_tree().current_scene.add_child(zombi)
+	zombies_vivos += 1
+	zombi.tree_exited.connect(_on_zombi_destruido)
 
 func _on_zombi_destruido():
 	zombies_vivos -= 1
@@ -90,7 +104,7 @@ func iniciar_tiempo_compra():
 		mercader.visible = true
 	
 	# Iniciamos la cuenta atrás de 30 segundos
-	prep_timer.start(tiempo_compra)
+	prep_timer.start(prep_timer)
 
 func _on_prep_timer_timeout():
 	print("Se acabó el tiempo de compra. El mercader se marcha.")

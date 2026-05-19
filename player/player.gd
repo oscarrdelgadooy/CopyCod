@@ -58,7 +58,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_key_pressed(KEY_D): direction.x += 1
 	direction = direction.normalized()
 	
-	if direction != Vector2.ZERO and not is_hurting:
+	if direction != Vector2.ZERO:
 		velocity = direction * speed
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, speed)
@@ -73,7 +73,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed("ui_right"): shoot_dir.x += 1
 	shoot_dir = shoot_dir.normalized()
 
-	if not is_hurting and sprite:
+	if sprite:
 		if shoot_dir != Vector2.ZERO and not is_reloading:
 			if shoot_dir.x > 0: sprite.flip_h = false
 			elif shoot_dir.x < 0: sprite.flip_h = true
@@ -88,27 +88,21 @@ func _physics_process(delta: float) -> void:
 	update_animations(direction, shoot_dir)
 
 func shoot(dir: Vector2) -> void:
-	print("1. Intento de disparo detectado") # <-- CHIVATO
-	if is_reloading or is_hurting:
-		print("Disparo cancelado: recargando o herido")
+	if is_reloading:
 		return
 	if current_ammo <= 0:
-		print("Disparo cancelado: sin munición")
 		start_reload()
 		return
 
-	print("2. Munición correcta, procediendo a instanciar") # <-- CHIVATO
 	current_ammo -= 1
 	
 	if bullet_scene:
-		print("3. ESCENA ENCONTRADA, SPAWNEANDO BALA") # <-- CHIVATO
 		var bullet = bullet_scene.instantiate()
 		bullet.damage = damage
 		bullet.rotation = dir.angle()
 		bullet.global_position = global_position + (dir * bullet_spawn_distance)
 		get_tree().current_scene.add_child(bullet)
-	else:
-		print("¡ERROR CRÍTICO: bullet_scene está VACÍA en el Inspector!") # <-- CHIVATO
+
 
 func start_reload() -> void:
 	if is_reloading or current_ammo == MAX_AMMO or is_dead:
@@ -146,8 +140,3 @@ func update_animations(direction: Vector2, shoot_dir: Vector2) -> void:
 func upgrade_damage(amount: int):
 	var daño_anterior = damage
 	damage += amount
-	print("--------------------------------")
-	print("¡MEJORA COMPRADA!")
-	print("Daño anterior: ", daño_anterior)
-	print("Nuevo daño: ", damage)
-	print("--------------------------------")

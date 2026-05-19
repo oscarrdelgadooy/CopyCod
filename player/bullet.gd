@@ -28,10 +28,10 @@ func _on_body_entered(body: Node2D) -> void:
 	# Si el cuerpo tiene la función de recibir daño (como el Zombi)
 	if body.has_method("take_damage"):
 		body.take_damage(damage) # <--- ¡AQUÍ USAMOS EL DAÑO REAL DE LA TIENDA!
-		#queue_free() # La bala desaparece
+		queue_free()
 		return
 
 	# Si choca contra los muros del mapa
 	if body.name == "MurosInvisibles":
-		#queue_free()
+		queue_free()
 		return
