@@ -1,11 +1,11 @@
 [gd_scene load_steps=58 format=3 uid="uid://b13uh5vwf7u3s"]
 
 [ext_resource type="Texture2D" uid="uid://dqtdnliilutks" path="res://mercader/Trader_1/Approval.png" id="1_27ca4"]
+[ext_resource type="Script" path="res://mercader/mercader.gd" id="1_50diy"]
 [ext_resource type="Texture2D" uid="uid://dobfdewc4r0ro" path="res://mercader/Trader_1/Dialogue.png" id="2_h36ec"]
 [ext_resource type="Texture2D" uid="uid://enculivtoxq3" path="res://mercader/Trader_1/Idle.png" id="3_3wr2k"]
 [ext_resource type="Texture2D" uid="uid://c80ge418ek2n2" path="res://mercader/Trader_1/Idle_2.png" id="4_3ok26"]
 [ext_resource type="Texture2D" uid="uid://r0h0at02e0od" path="res://mercader/Trader_1/Idle_3.png" id="5_am2wc"]
-[ext_resource type="Texture2D" uid="uid://b1yih4f5klssx" path="res://ui/merchant/Skillicon7_13.png" id="6_up5i1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uo3fi"]
 atlas = ExtResource("1_27ca4")
@@ -378,6 +378,7 @@ size = Vector2(41, 81)
 radius = 126.004
 
 [node name="Mercader" type="StaticBody2D"]
+script = ExtResource("1_50diy")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(-3, 1)
@@ -390,24 +391,14 @@ frame_progress = 0.507227
 position = Vector2(-10.5, 29.5)
 shape = SubResource("RectangleShape2D_n2jsm")
 
-[node name="ZonaInteracción" type="Area2D" parent="."]
+[node name="ZonaInteraccion" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ZonaInteracción"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZonaInteraccion"]
 position = Vector2(-12, 26)
 shape = SubResource("CircleShape2D_35hj0")
 
-[node name="TiendaUI" type="CanvasLayer" parent="."]
-
-[node name="FondoTienda" type="Panel" parent="TiendaUI"]
-offset_left = -146.0
-offset_top = -96.0
-offset_right = 148.0
-offset_bottom = 97.0
-
-[node name="BotonDaño" type="Button" parent="TiendaUI/FondoTienda"]
-layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
-text = "+1 Daño
-"
-icon = ExtResource("6_up5i1")
+[node name="Label" type="Label" parent="."]
+visible = false
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Pulsa 'E' para comprar."

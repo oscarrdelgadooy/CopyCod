@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://d0i4lmybic78k"]
+
+[ext_resource type="Script" path="res://mercader/tienda_ui.gd" id="1_l047l"]
+[ext_resource type="Texture2D" uid="uid://b1yih4f5klssx" path="res://ui/merchant/Skillicon7_13.png" id="2_hrh3d"]
+
+[node name="TiendaUI" type="CanvasLayer"]
+process_mode = 3
+layer = 10
+script = ExtResource("1_l047l")
+
+[node name="FondoTienda" type="Panel" parent="."]
+process_mode = 3
+offset_left = -146.0
+offset_top = -292.0
+offset_right = 445.0
+offset_bottom = 97.0
+
+[node name="BotonDaño" type="Button" parent="FondoTienda"]
+process_mode = 3
+layout_mode = 2
+offset_left = 38.0
+offset_top = 43.0
+offset_right = 237.0
+offset_bottom = 107.0
+text = "+1 Daño
+"
+icon = ExtResource("2_hrh3d")
+alignment = 0
+
+[node name="LabelDinero" type="Label" parent="FondoTienda"]
+layout_mode = 0
+offset_left = 383.0
+offset_top = 28.0
+offset_right = 550.0
+offset_bottom = 101.0
