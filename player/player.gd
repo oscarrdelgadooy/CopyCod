@@ -14,6 +14,8 @@ var current_ammo: int = 8
 const MAX_AMMO: int = 8
 var coins: int = 0
 
+var damage: int = 10
+
 var is_reloading: bool = false
 var is_dead: bool = false
 var is_hurting: bool = false
@@ -25,6 +27,7 @@ var is_invincible: bool = false
 
 # --- REFERENCIAS A NODOS ---
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+
 
 func _ready() -> void:
 	current_health = max_health
@@ -94,6 +97,7 @@ func shoot(dir: Vector2) -> void:
 	current_ammo -= 1
 	if bullet_scene:
 		var bullet = bullet_scene.instantiate()
+		bullet.damage = damage
 		bullet.global_position = global_position + Vector2(0, 32) + (dir * bullet_spawn_distance)
 		bullet.global_rotation = dir.angle() 
 		get_tree().current_scene.add_child(bullet)
@@ -130,3 +134,12 @@ func update_animations(direction: Vector2, shoot_dir: Vector2) -> void:
 	if shoot_dir != Vector2.ZERO: sprite.play("shoot")
 	elif direction != Vector2.ZERO: sprite.play("run")
 	else: sprite.play("idle")
+
+func upgrade_damage(amount: int):
+	var daño_anterior = damage
+	damage += amount
+	print("--------------------------------")
+	print("¡MEJORA COMPRADA!")
+	print("Daño anterior: ", daño_anterior)
+	print("Nuevo daño: ", damage)
+	print("--------------------------------")

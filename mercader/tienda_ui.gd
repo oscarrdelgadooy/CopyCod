@@ -1,7 +1,7 @@
 extends CanvasLayer
 
 @onready var jugador = get_tree().current_scene.find_child("Player", true, false)
-@onready var close_button = $Panel/CloseButton
+@onready var close_button = $FondoTienda/CloseButton
 
 func _ready():
 	self.visible = false
@@ -36,3 +36,14 @@ func _on_BotonVida_pressed():
 		print("¡Vida recuperada!")
 	else:
 		print("No tienes suficientes monedas")
+
+
+
+func _on_boton_damage_pressed() -> void:
+	if jugador and jugador.coins >= 0:
+		jugador.coins -= 50
+		jugador.upgrade_damage(10) # ¡Llamamos a la nueva función!
+		print("¡Daño mejorado!")
+	else:
+		print("No tienes suficientes monedas")
+	pass # Replace with function body.

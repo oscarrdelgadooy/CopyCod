@@ -3,6 +3,8 @@ extends Area2D
 @export var speed: float = 700.0
 @export var lifetime: float = 5.0
 
+var damage: int = 10
+
 func _ready() -> void:
 	await get_tree().create_timer(lifetime).timeout
 	queue_free()
@@ -28,3 +30,8 @@ func _physics_process(delta: float) -> void:
 		elif body.name == "MurosInvisibles":
 			queue_free()
 			break
+
+func _on_body_entered(body):
+	if body.has_method("take_damage"):
+		body.take_damage(damage) # La bala aplica el daño actual
+	queue_free() # La bala desaparece al impactar

@@ -15,7 +15,7 @@ offset_top = -292.0
 offset_right = 445.0
 offset_bottom = 97.0
 
-[node name="BotonDaño" type="Button" parent="FondoTienda"]
+[node name="BotonDamage" type="Button" parent="FondoTienda"]
 process_mode = 3
 layout_mode = 2
 offset_left = 38.0
@@ -43,3 +43,5 @@ offset_left = -18.0
 offset_bottom = 31.0
 grow_horizontal = 0
 text = "X"
+
+[connection signal="pressed" from="FondoTienda/BotonDamage" to="." method="_on_boton_damage_pressed"]
