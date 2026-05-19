@@ -1,7 +1,6 @@
 extends Node2D
 
 @onready var label_ayuda = $Label
-# Buscamos la tienda en la escena principal
 @onready var tienda = get_tree().current_scene.find_child("TiendaUI", true, false)
 
 var jugador_cerca: bool = false
@@ -22,6 +21,7 @@ func _on_body_exited(body):
 		label_ayuda.visible = false
 
 func _process(_delta):
+	# Solo abrimos si está cerca, pulsamos E, y la tienda NO está ya abierta
 	if jugador_cerca and Input.is_action_just_pressed("interactuar"):
-		if tienda:
+		if tienda and not tienda.visible:
 			tienda.abrir()
