@@ -12,8 +12,10 @@ script = ExtResource("1_22apw")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("1_cas44")
 animation = &"bullet"
-frame_progress = 0.683729
+frame_progress = 0.491582
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0.5, 5)
 shape = SubResource("RectangleShape2D_lpsk5")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

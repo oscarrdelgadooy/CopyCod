@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://iq4u4rrsrmmi"]
+[gd_scene load_steps=9 format=3 uid="uid://iq4u4rrsrmmi"]
 
 [ext_resource type="Texture2D" uid="uid://b1bcqwlv4dcsx" path="res://assets/game_background_1.png" id="1_qms4h"]
 [ext_resource type="PackedScene" uid="uid://cswj4w2trxjat" path="res://player/player.tscn" id="2_tpqal"]
 [ext_resource type="PackedScene" uid="uid://b13uh5vwf7u3s" path="res://mercader/mercader.tscn" id="3_lyd8q"]
+[ext_resource type="PackedScene" uid="uid://c0vbib0na4klu" path="res://player/bullet.tscn" id="3_nkjdp"]
 [ext_resource type="Script" path="res://scenes/map/wave_manager.gd" id="5_tbdxw"]
 [ext_resource type="PackedScene" uid="uid://bvjf36s62h6qm" path="res://ui/hud.tscn" id="6_6f0bp"]
 [ext_resource type="PackedScene" uid="uid://d0i4lmybic78k" path="res://tienda_ui.tscn" id="7_q1fji"]
@@ -90,6 +91,7 @@ shape = SubResource("RectangleShape2D_o3rex")
 
 [node name="Player" parent="." instance=ExtResource("2_tpqal")]
 position = Vector2(532, 312)
+bullet_scene = ExtResource("3_nkjdp")
 
 [node name="Mercader" parent="." instance=ExtResource("3_lyd8q")]
 process_mode = 3

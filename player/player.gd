@@ -88,19 +88,27 @@ func _physics_process(delta: float) -> void:
 	update_animations(direction, shoot_dir)
 
 func shoot(dir: Vector2) -> void:
+	print("1. Intento de disparo detectado") # <-- CHIVATO
 	if is_reloading or is_hurting:
+		print("Disparo cancelado: recargando o herido")
 		return
 	if current_ammo <= 0:
+		print("Disparo cancelado: sin munición")
 		start_reload()
 		return
 
+	print("2. Munición correcta, procediendo a instanciar") # <-- CHIVATO
 	current_ammo -= 1
+	
 	if bullet_scene:
+		print("3. ESCENA ENCONTRADA, SPAWNEANDO BALA") # <-- CHIVATO
 		var bullet = bullet_scene.instantiate()
 		bullet.damage = damage
-		bullet.global_position = global_position + Vector2(0, 32) + (dir * bullet_spawn_distance)
-		bullet.global_rotation = dir.angle() 
+		bullet.rotation = dir.angle()
+		bullet.global_position = global_position + (dir * bullet_spawn_distance)
 		get_tree().current_scene.add_child(bullet)
+	else:
+		print("¡ERROR CRÍTICO: bullet_scene está VACÍA en el Inspector!") # <-- CHIVATO
 
 func start_reload() -> void:
 	if is_reloading or current_ammo == MAX_AMMO or is_dead:

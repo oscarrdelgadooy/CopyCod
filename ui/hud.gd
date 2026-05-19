@@ -35,12 +35,14 @@ func _process(_delta: float) -> void:
 			activa_game_over()
 
 	# 2. ACTUALIZAR RONDAS
+# 2. ACTUALIZAR RONDAS
 	if wave_manager:
-		if wave_manager.current_round <= wave_manager.MAX_ROUNDS:
-			if label_ronda:
-				label_ronda.text = "🚩 RONDA: " + str(wave_manager.current_round) + " / 10"
-		else:
-			if label_ronda:
+		if label_ronda:
+			# Leemos 'ronda_actual' del nuevo WaveManager
+			label_ronda.text = "🚩 RONDA: " + str(wave_manager.ronda_actual) + " / 10"
+			
+			# Si supera la ronda 10, puedes activar la victoria si quieres
+			if wave_manager.ronda_actual > 10:
 				label_ronda.text = "🏆 ¡VICTORIA TOTAL! 🏆"
 
 # 🆕 FUNCIÓN QUE DETIENE EL JUEGO AL MORIR
