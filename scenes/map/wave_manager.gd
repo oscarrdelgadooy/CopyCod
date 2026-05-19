@@ -1,89 +1,103 @@
-extends Node2D
+extends Node
 
-# --- CONFIGURACIÓN DE ESCENAS ---
-@export var zombie_normal: PackedScene
-@export var zombie_fast: PackedScene
+@export var zombie_scene: PackedScene  # Arrastra aquí tu .tscn de Zombi desde el Inspector
+@export var tiempo_compra: float = 30.0 # Tiempo que se queda el mercader (30 segundos)
 
-# --- TUS PUNTOS DE SPAWN (Marker2D o Node2D del mapa) ---
-@export var spawn_points: Array[Node2D] = []
+@onready var spawn_timer = $SpawnTimer
+@onready var prep_timer = $PrepTimer
 
-# --- AJUSTE DE TIEMPO FIJO ---
-@export var spawn_cooldown: float = 0.8 # Tiempo exacto entre zombis
+# Referencias a la tienda, mercader y interfaz
+@onready var mercader = get_parent().find_child("Mercader", true, false)
+@onready var tienda_ui = get_parent().find_child("TiendaUI", true, false)
+@onready var label_ronda = get_parent().find_child("LabelRonda", true, false) # Ajusta el nombre de tu Label de rondas
 
-# --- VARIABLES DE CONTROL ---
-var current_round: int = 1
-const MAX_ROUNDS: int = 10
+var ronda_actual: int = 0
+var zombies_por_spawnear: int = 0
+var zombies_vivos: int = 0
 
-var total_zombies_this_round: int = 0
-var zombies_spawned_so_far: int = 0
-var zombies_alive: int = 0
-var is_round_active: bool = false
-
-func _ready() -> void:
-	# 2 segundos de margen al empezar la partida para que el jugador respire
+func _ready():
+	# Conectamos las señales de los Timers por código para evitar fallos
+	spawn_timer.timeout.connect(_on_spawn_timer_timeout)
+	prep_timer.timeout.connect(_on_prep_timer_timeout)
+	
+	# Al empezar el juego, el mercader y la tienda están totalmente ocultos
+	if mercader: mercader.visible = false
+	if tienda_ui: tienda_ui.visible = false
+	
+	# Configuramos el timer de preparación para que solo se ejecute una vez por ronda
+	prep_timer.one_shot = true
+	
+	# Arrancamos la primera ronda con un pequeño retraso inicial
 	await get_tree().create_timer(2.0).timeout
-	start_next_round()
+	iniciar_nueva_ronda()
 
-func start_next_round() -> void:
-	if current_round > MAX_ROUNDS:
-		win_game()
-		return
-		
-	is_round_active = true
-	zombies_spawned_so_far = 0
+func iniciar_nueva_ronda():
+	ronda_actual += 1
+	# Fórmula matemática simple: Ronda 1 = 5 zombis, Ronda 2 = 10, Ronda 3 = 15...
+	zombies_por_spawnear = ronda_actual * 5 
+	zombies_vivos = 0
 	
-	# 📈 CURVA DE DIFICULTAD: Cada ronda se suman 4 zombis más
-	total_zombies_this_round = 2 + (current_round * 4) 
-	zombies_alive = total_zombies_this_round
+	print("--- INICIANDO RONDA ", ronda_actual, " ---")
 	
-	# Probabilidad de zombi rápido (Ronda 1 = 10% | va subiendo hasta el 80% en la ronda 10)
-	var fast_chance = min(0.8, current_round * 0.08)
+	# 1. Mostrar el número de la ronda en pantalla
+	if label_ronda:
+		label_ronda.text = "RONDA " + str(ronda_actual)
+		label_ronda.visible = true
+		await get_tree().create_timer(3.0).timeout # Se muestra durante 3 segundos
+		label_ronda.visible = false
 	
-	print("=== INICIA LA RONDA ", current_round, " === Enemigos: ", total_zombies_this_round)
+	# Por seguridad, nos aseguramos de que el mercader ya no esté
+	if mercader: mercader.visible = false
+	if tienda_ui: tienda_ui.visible = false
 	
-	# Bucle para ir soltando los zombis uno a uno con el retraso de 0.8s
-	while zombies_spawned_so_far < total_zombies_this_round:
-		if not is_round_active: break # Por si acaso
-		spawn_zombie(fast_chance)
-		zombies_spawned_so_far += 1
-		
-		# ⏱️ Espera los 0.8 segundos clavados antes del siguiente
-		await get_tree().create_timer(spawn_cooldown).timeout
+	# 2. Empezar a spawnear zombis
+	spawn_timer.start()
 
-func spawn_zombie(fast_chance: float) -> void:
-	if spawn_points.size() == 0:
-		print("⚠️ Alerta: ¡No has metido puntos de spawn en el WaveManager!")
-		return
-		
-	# 1. Elegir un punto de spawn del mapa al azar
-	var random_point = spawn_points[randi() % spawn_points.size()]
-	
-	# 2. Decidir el tipo de zombi según la ronda
-	var zombie_scene = zombie_normal
-	if randf() < fast_chance and zombie_fast:
-		zombie_scene = zombie_fast
-		
-	# 3. Instanciarlo en el mapa
+func _on_spawn_timer_timeout():
+	if zombies_por_spawnear > 0:
+		spawn_un_zombi()
+		zombies_por_spawnear -= 1
+	else:
+		spawn_timer.stop() # Ya han salido todos los zombis programados
+
+func spawn_un_zombi():
 	if zombie_scene:
-		var new_enemy = zombie_scene.instantiate()
-		new_enemy.global_position = random_point.global_position
-		get_tree().current_scene.add_child(new_enemy)
-
-# --- FUNCIÓN CONECTADA CON LA MUERTE DEL ZOMBI ---
-func zombie_killed() -> void:
-	zombies_alive -= 1
-	print("Zombis que quedan en la ronda: ", zombies_alive)
-	
-	# Si limpiamos la oleada completa... ¡Siguiente ronda!
-	if zombies_alive <= 0 and is_round_active:
-		is_round_active = false
-		print("=== ¡RONDA ", current_round, " SUPERADA! ===")
-		current_round += 1
+		var zombi = zombie_scene.instantiate()
 		
-		# 4 segundos de descanso para ir a comprar al Mercader tranquilamente
-		await get_tree().create_timer(4.0).timeout
-		start_next_round()
+		# AQUÍ: Dale una posición de spawn (puedes usar marcadores o posiciones fijas)
+		# zombi.global_position = Vector2(500, 400) 
+		
+		get_tree().current_scene.add_child(zombi)
+		zombies_vivos += 1
+		
+		# Vinculamos la muerte del zombi para saber cuándo el mapa se queda limpio.
+		# Usamos 'tree_exited' que se activa automáticamente cuando haces queue_free() en el zombi.
+		zombi.tree_exited.connect(_on_zombi_destruido)
 
-func win_game() -> void:
-	print("🏆 ¡BRUTAL! Has sobrevivido a las 10 rondas de la mazmorra 🏆")
-	get_tree().paused = true # Congela el juego al ganar
+func _on_zombi_destruido():
+	zombies_vivos -= 1
+	print("Zombi eliminado. Vivos restantes: ", zombies_vivos)
+	
+	# 3. Comprobar si ya no quedan más zombis ni por spawnear ni vivos
+	if zombies_por_spawnear <= 0 and zombies_vivos <= 0:
+		iniciar_tiempo_compra()
+
+func iniciar_tiempo_compra():
+	print("¡Mapa limpio! El mercader ha llegado.")
+	
+	# Aparece el mercader en el mapa
+	if mercader:
+		mercader.visible = true
+	
+	# Iniciamos la cuenta atrás de 30 segundos
+	prep_timer.start(tiempo_compra)
+
+func _on_prep_timer_timeout():
+	print("Se acabó el tiempo de compra. El mercader se marcha.")
+	
+	# Desaparece el mercader y cerramos la interfaz de la tienda por la fuerza
+	if mercader: mercader.visible = false
+	if tienda_ui: tienda_ui.visible = false
+	
+	# Saltamos a la siguiente ronda de forma automática
+	iniciar_nueva_ronda()

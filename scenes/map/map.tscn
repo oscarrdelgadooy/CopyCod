@@ -1,10 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://iq4u4rrsrmmi"]
+[gd_scene load_steps=8 format=3 uid="uid://iq4u4rrsrmmi"]
 
 [ext_resource type="Texture2D" uid="uid://b1bcqwlv4dcsx" path="res://assets/game_background_1.png" id="1_qms4h"]
 [ext_resource type="PackedScene" uid="uid://cswj4w2trxjat" path="res://player/player.tscn" id="2_tpqal"]
 [ext_resource type="PackedScene" uid="uid://b13uh5vwf7u3s" path="res://mercader/mercader.tscn" id="3_lyd8q"]
-[ext_resource type="PackedScene" uid="uid://6yy1txggadeg" path="res://zombie/zombie.tscn" id="3_sb8fs"]
-[ext_resource type="PackedScene" uid="uid://bldgm7omcxuqb" path="res://zombie/zombie_fast.tscn" id="4_2y6dg"]
 [ext_resource type="Script" path="res://scenes/map/wave_manager.gd" id="5_tbdxw"]
 [ext_resource type="PackedScene" uid="uid://bvjf36s62h6qm" path="res://ui/hud.tscn" id="6_6f0bp"]
 [ext_resource type="PackedScene" uid="uid://d0i4lmybic78k" path="res://tienda_ui.tscn" id="7_q1fji"]
@@ -97,11 +95,12 @@ position = Vector2(532, 312)
 process_mode = 3
 position = Vector2(264, 269)
 
-[node name="WaveManager" type="Node2D" parent="." node_paths=PackedStringArray("spawn_points")]
+[node name="WaveManager" type="Node2D" parent="."]
 script = ExtResource("5_tbdxw")
-zombie_normal = ExtResource("3_sb8fs")
-zombie_fast = ExtResource("4_2y6dg")
-spawn_points = [NodePath("../SpawnPoints/Spawn1"), NodePath("../SpawnPoints/Spawn2"), NodePath("../SpawnPoints/Spawn3")]
+
+[node name="SpawnTimer" type="Timer" parent="WaveManager"]
+
+[node name="PrepTimer" type="Timer" parent="WaveManager"]
 
 [node name="TiendaUI" parent="." instance=ExtResource("7_q1fji")]
 offset = Vector2(450, 450)
