@@ -61,29 +61,29 @@ func _on_spawn_timer_timeout():
 		spawn_timer.stop() # Ya han salido todos los zombis programados
 
 func spawn_un_zombi():
-	# Comprobamos que al menos la escena normal esté asignada
-	if not zombie_scene:
+	# 1. Instanciamos el zombi (dejamos el normal por ahaora, o tu lógica de aleatorio si tienes 2)
+	if not zombie_scene: 
 		return
 		
-	var zombi: CharacterBody2D = null
-	
-	# Generamos un número aleatorio entre 0 y 100
-	var probabilidad = randf_range(0, 100)
-	
-	# Si sale más de 70 y tenemos configurado el zombi rápido, lo spawneamos
-	if probabilidad > 70.0 and zombie_rapido_scene:
-		zombi = zombie_rapido_scene.instantiate()
-	else:
-		zombi = zombie_scene.instantiate()
+	var zombi = zombie_scene.instantiate()
 		
-	# --- POSICIONAMIENTO (Cerca del jugador para testear) ---
-	var player = get_tree().current_scene.find_child("Player", true, false)
-	if player:
-		zombi.global_position = player.global_position + Vector2(300, randf_range(-100, 100))
+	# 2. BUSCAMOS LOS PUNTOS DE SPAWN
+	var carpeta_spawners = get_tree().current_scene.find_child("SpawnPoints", true, false)
+	
+	if carpeta_spawners and carpeta_spawners.get_child_count() > 0:
+		# Cogemos todos los Marker2D que hayas puesto
+		var lista_puntos = carpeta_spawners.get_children()
+		
+		# Elegimos uno al azar (magia de Godot)
+		var punto_elegido = lista_puntos.pick_random()
+		
+		# Movemos el zombi a esa posición exacta
+		zombi.global_position = punto_elegido.global_position
 	else:
+		# Posición de emergencia por si se te olvida crear la carpeta Spawners
 		zombi.global_position = Vector2(500, 400)
 		
-	# Lo añadimos al juego y conectamos su muerte
+	# 3. Lo añadimos al juego
 	get_tree().current_scene.add_child(zombi)
 	zombies_vivos += 1
 	zombi.tree_exited.connect(_on_zombi_destruido)
@@ -97,14 +97,13 @@ func _on_zombi_destruido():
 		iniciar_tiempo_compra()
 
 func iniciar_tiempo_compra():
-	print("¡Mapa limpio! El mercader ha llegado.")
-	
-	# Aparece el mercader en el mapa
-	if mercader:
+	# Aparece el mercader
+	if mercader: 
 		mercader.visible = true
 	
-	# Iniciamos la cuenta atrás de 30 segundos
-	prep_timer.start(prep_timer)
+	# Forzamos el número 30.0 (segundos) directamente para evitar el error de Objeto
+	if prep_timer:
+		prep_timer.start(30.0)
 
 func _on_prep_timer_timeout():
 	print("Se acabó el tiempo de compra. El mercader se marcha.")
