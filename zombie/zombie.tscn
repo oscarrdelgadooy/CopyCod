@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://6yy1txggadeg"]
+[gd_scene load_steps=40 format=3 uid="uid://6yy1txggadeg"]
 
 [ext_resource type="Script" path="res://zombie/zombie.gd" id="1_00hs2"]
 [ext_resource type="Texture2D" uid="uid://5k7r2w7nq52m" path="res://zombie/Zombie_2/Attack.png" id="2_6sa3v"]
@@ -248,6 +248,9 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_55ta3"]
+radius = 43.0
+
 [node name="Zombie" type="CharacterBody2D"]
 position = Vector2(-1, -1)
 script = ExtResource("1_00hs2")
@@ -260,3 +263,12 @@ shape = SubResource("RectangleShape2D_3d8kl")
 sprite_frames = SubResource("SpriteFrames_1xcmh")
 animation = &"idle"
 frame_progress = 0.32643
+
+[node name="Hitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(-6, 31)
+shape = SubResource("CircleShape2D_55ta3")
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
+[connection signal="body_exited" from="Hitbox" to="." method="_on_hitbox_body_exited"]

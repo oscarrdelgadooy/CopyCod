@@ -1,15 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://cswj4w2trxjat"]
+[gd_scene load_steps=4 format=3 uid="uid://cswj4w2trxjat"]
 
 [ext_resource type="SpriteFrames" uid="uid://drnpvf6b3jp7l" path="res://player/sprite_frames_player.tres" id="1_8kywk"]
 [ext_resource type="Script" path="res://player/player.gd" id="1_cv08p"]
-[ext_resource type="PackedScene" uid="uid://c0vbib0na4klu" path="res://player/bullet.tscn" id="2_xbggv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_acrht"]
 size = Vector2(43, 64)
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_cv08p")
-bullet_scene = ExtResource("2_xbggv")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-9.5, 34)

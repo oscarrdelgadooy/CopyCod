@@ -1,107 +1,111 @@
 extends CharacterBody2D
 
 # --- VARIABLES CONFIGURABLES ---
-@export var speed: float = 90.0      # Más lento que el jugador para que puedas huir
-@export var health: int = 1          # Muere de 1 tiro (puedes subirlo en el Inspector)
-@export var damage_amount: int = 2   # Cuánta vida le quita al jugador por mordisco
-@export var attack_cooldown: float = 1.0 # Tiempo entre mordiscos (en segundos)
+@export var speed: float = 90.0      # (En zombie_fast cambia esto a 160.0)
+@export var health: int = 1          
+@export var damage_amount: int = 2   
+@export var attack_cooldown: float = 1.0 
 
 # --- VARIABLES DE ESTADO INTERNO ---
 var player: CharacterBody2D = null
 var is_dead: bool = false
-var attack_timer: float = 0.0
-var coins: int = 0 # El dinero actual del jugador para gastar en el mercader
-# --- REFERENCIAS A NODOS ---
+var is_currently_grabbing: bool = false 
+
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var hitbox: Area2D = $Hitbox
 
 func _ready() -> void:
-	# Buscamos al jugador en la escena principal de forma automática
-	# Usamos 'get_tree().get_first_node_in_group' o lo buscamos por nombre
+	# Buscamos al jugador automáticamente en el mapa
 	player = get_tree().current_scene.find_child("Player", true, false)
-	
 	if sprite:
 		sprite.play("walk")
 
-func _physics_process(delta: float) -> void:
-	if is_dead:
+func _physics_process(_delta: float) -> void:
+	if is_dead or is_currently_grabbing:
 		return
 
-	# Controlar el temporizador del ataque
-	if attack_timer > 0.0:
-		attack_timer -= delta
-
-	# 1. IA DE PERSECUCIÓN
-	if player and not player.is_dead: # Solo persigue si el jugador existe y está vivo
-		# Calcular vector hacia el jugador
-		var direction = (player.global_position - global_position).normalized()
-		velocity = direction * speed
+	if player and not player.is_dead: 
 		
-		# 2. GIRAR EL SPRITE (FLIP) HACIA DONDE CAMINA EL ZOMBI
-		if sprite:
-			if velocity.x > 0:
-				sprite.flip_h = false # Mira a la derecha
-			elif velocity.x < 0:
-				sprite.flip_h = true  # Mira a la izquierda
+		# 1. ¿ESTOY LO SUFICIENTEMENTE CERCA?
+		if is_player_in_range():
+			
+			# 2. ¿PUEDO MORDERLE?
+			if not player.is_grabbed and not player.is_invincible:
+				start_grab_sequence() # ¡ÑAM!
+			else:
+				# El jugador es invencible o está ocupado. Esperamos quietos al lado.
+				velocity = Vector2.ZERO
+				if sprite and sprite.sprite_frames.has_animation("idle"):
+					sprite.play("idle")
+		
+		# 3. SI NO ESTOY CERCA, CORRO HACIA ÉL
+		else:
+			var direction = (player.global_position - global_position).normalized()
+			velocity = direction * speed
+			
+			if sprite:
+				sprite.play("walk")
+				sprite.flip_h = velocity.x < 0
 	else:
-		# Si el jugador muere, el zombi se queda deambulando o quieto
-		velocity = velocity.move_toward(Vector2.ZERO, speed)
-		if sprite and sprite.animation != "idle" and sprite.sprite_frames.has_animation("idle"):
+		velocity = Vector2.ZERO
+		if sprite and sprite.sprite_frames.has_animation("idle"):
 			sprite.play("idle")
 
-	# Mover al zombi gestionando colisiones con los muros PNG automáticamente
 	move_and_slide()
 
-	# 3. LÓGICA DE DAÑO CONTINUO (Morder al jugador si está en la Hitbox)
-	if attack_timer <= 0.0:
-		check_attack()
+# --- FUNCIONES DE ATAQUE ---
+func is_player_in_range() -> bool:
+	if hitbox:
+		for body in hitbox.get_overlapping_bodies():
+			if body == player:
+				return true
+	return false
 
-# --- RECIBIR DAÑO (Llamado por la bala) ---
-func take_damage(amount: int) -> void:
-	if is_dead:
-		return
-		
-	health -= amount
-	print("Zombi herido. Vida restante: ", health)
+func start_grab_sequence() -> void:
+	is_currently_grabbing = true
+	velocity = Vector2.ZERO
 	
+	# Bloqueamos al jugador
+	player.is_grabbed = true 
+	
+	# Animación de ataque
+	if sprite and sprite.sprite_frames.has_animation("attack"):
+		sprite.play("attack")
+		
+	# Duración de la animación (1 segundo agarrado)
+	await get_tree().create_timer(1.0).timeout
+	
+	# Aplicamos el daño si seguimos vivos
+	if not is_dead and player:
+		if player.has_method("take_grab_damage"):
+			player.take_grab_damage(damage_amount)
+			
+	is_currently_grabbing = false
+
+# --- RECIBIR DAÑO Y MORIR ---
+func take_damage(amount: int) -> void:
+	if is_dead: return
+	health -= amount
 	if health <= 0:
 		die()
 
 func die() -> void:
 	is_dead = true
-	velocity = Vector2.ZERO # Frenazo total para que no siga caminando muerto
+	velocity = Vector2.ZERO
+	
+	if is_currently_grabbing and player and player.is_grabbed:
+		player.is_grabbed = false
 	
 	var manager = get_tree().current_scene.find_child("WaveManager", true, false)
-	if manager:
-		manager.zombie_killed()
+	if manager: manager.zombie_killed()
 	
-	# 💰 RECOMPENSA DIRECTA: Si tenemos al jugador localizado, le sumamos las monedas
-	if player:
-		# Le damos 2 monedas por baja (puedes cambiarlo por el número que quieras)
-		player.coins += 2 
-		print("¡Zombi eliminado! +2 Monedas. Cartera del jugador: ", player.coins)
+	if player: player.coins += 2 
 	
-	# Desactivamos colisiones de forma segura si existen
-	if has_node("CollisionShape2D"):
-		$CollisionShape2D.queue_free()
-	if hitbox:
-		hitbox.queue_free()
+	if has_node("CollisionShape2D"): $CollisionShape2D.queue_free()
+	if hitbox: hitbox.queue_free()
 		
-	# Animación de muerte
-	if sprite:
+	if sprite and sprite.sprite_frames.has_animation("dead"):
 		sprite.play("dead")
-	# Esperar 0.8 segundos enseñando el cadáver antes de borrarlo
+		
 	await get_tree().create_timer(0.8).timeout
 	queue_free()
-
-# --- COMPROBAR SI PUEDE MORDER ---
-func check_attack() -> void:
-	if hitbox:
-		var overlapping_bodies = hitbox.get_overlapping_bodies()
-		for body in overlapping_bodies:
-			# Si lo que está dentro de nuestra Hitbox es el jugador...
-			if body == player and not player.is_dead:
-				# Le llamamos a su función de recibir daño que programamos antes
-				body.take_damage(damage_amount)
-				attack_timer = attack_cooldown # Activamos el cooldown de mordisco
-				break

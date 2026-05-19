@@ -90,6 +90,7 @@ shape = SubResource("RectangleShape2D_o3rex")
 
 [node name="Player" parent="." instance=ExtResource("2_tpqal")]
 position = Vector2(576, 324)
+bullet_scene = null
 
 [node name="WaveManager" type="Node2D" parent="." node_paths=PackedStringArray("spawn_points")]
 script = ExtResource("5_tbdxw")
