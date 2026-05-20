@@ -14,14 +14,14 @@ var current_health: int = max_health
 var current_ammo: int = 8
 const MAX_AMMO: int = 8
 var coins: int = 0
+var shoot_timer: float = 0.0
+var kills: int = 0 # Guarda cuántos zombis ha matado el jugador
 
 var damage: int = 10
 
 var is_reloading: bool = false
 var is_dead: bool = false
 var is_hurting: bool = false
-var shoot_timer: float = 0.0
-var kills: int = 0 # Guarda cuántos zombis ha matado el jugador
 
 # --- VARIABLES DE AGARRE ZOMBI ---
 var is_grabbed: bool = false

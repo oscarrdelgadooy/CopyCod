@@ -3,8 +3,7 @@ extends CanvasLayer
 @onready var jugador = get_tree().current_scene.find_child("Player", true, false)
 @onready var wave_manager = get_tree().current_scene.find_child("WaveManager", true, false)
 
-@onready var barra_vida = $MarcoVida/BarraVida
-@onready var barra_municion = $BarraMunicion
+@onready var barra_vida = $Interfaz/MarcoVida/BarraVida
 @onready var label_monedas = $Interfaz/ContenedorMonedas/LabelMonedas
 @onready var icono_moneda = $Interfaz/ContenedorMonedas/EspacioIcono/IconoMoneda
 @onready var label_anuncio_ronda = $Interfaz/LabelAnuncioRonda
@@ -35,8 +34,7 @@ func _process(delta: float) -> void:
 	if jugador:
 		if barra_vida:
 			barra_vida.value = jugador.current_health
-		if barra_municion:
-			barra_municion.value = jugador.current_ammo
+
 		
 		if jugador.coins != monedas_visuales:
 			monedas_visuales = jugador.coins

@@ -23,14 +23,15 @@ corner_radius_top_right = 20
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slylx"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hdwis"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pdnnm"]
+bg_color = Color(0.405746, 0.0517782, 0.0513362, 1)
 corner_radius_top_left = 20
 corner_radius_top_right = 20
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hdwh1"]
-bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1nvkf"]
 atlas = ExtResource("2_jwx2n")
@@ -180,14 +181,6 @@ offset_right = 1055.0
 offset_bottom = 613.0
 label_settings = SubResource("LabelSettings_ieho8")
 
-[node name="LabelRonda" type="Label" parent="Interfaz"]
-layout_mode = 0
-offset_left = 520.0
-offset_top = 30.0
-offset_right = 596.0
-offset_bottom = 53.0
-text = "RONDA: 1"
-
 [node name="GameOverPanel" type="Panel" parent="Interfaz"]
 visible = false
 layout_mode = 0
@@ -215,7 +208,6 @@ offset_bottom = 71.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_kmy3r")
 
 [node name="BarraVida" type="ProgressBar" parent="Interfaz/MarcoVida"]
-modulate = Color(0.180651, 0.00962434, 0.00112346, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -226,8 +218,8 @@ offset_right = -4.0
 offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_slylx")
-theme_override_styles/fill = SubResource("StyleBoxFlat_hdwh1")
+theme_override_styles/background = SubResource("StyleBoxFlat_hdwis")
+theme_override_styles/fill = SubResource("StyleBoxFlat_pdnnm")
 value = 100.0
 allow_greater = true
 allow_lesser = true
