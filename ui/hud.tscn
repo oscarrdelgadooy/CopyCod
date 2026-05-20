@@ -1,6 +1,28 @@
-[gd_scene load_steps=2 format=3 uid="uid://bvjf36s62h6qm"]
+[gd_scene load_steps=6 format=3 uid="uid://bvjf36s62h6qm"]
 
 [ext_resource type="Script" path="res://ui/hud.gd" id="1_l4qoo"]
+[ext_resource type="Texture2D" uid="uid://dvj6e6tms11p5" path="res://ui/UI_Flat_BarFill01d.png" id="2_akyir"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kmy3r"]
+bg_color = Color(0, 0, 0, 0.773)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.435192, 0.435192, 0.435192, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slylx"]
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hdwh1"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [node name="Hud" type="CanvasLayer"]
 process_mode = 3
@@ -13,14 +35,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="LabelVida" type="Label" parent="Interfaz"]
-layout_mode = 0
-offset_left = 30.0
-offset_top = 30.0
-offset_right = 104.0
-offset_bottom = 53.0
-text = "VIDA: 100"
 
 [node name="LabelMonedas" type="Label" parent="Interfaz"]
 layout_mode = 0
@@ -63,5 +77,37 @@ layout_mode = 0
 offset_right = 8.0
 offset_bottom = 8.0
 text = "Volver al menú."
+
+[node name="MarcoVida" type="Panel" parent="Interfaz"]
+offset_left = 37.0
+offset_top = 30.0
+offset_right = 404.0
+offset_bottom = 71.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_kmy3r")
+
+[node name="BarraVida" type="ProgressBar" parent="Interfaz/MarcoVida"]
+modulate = Color(0.180651, 0.00962434, 0.00112346, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_slylx")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hdwh1")
+value = 100.0
+allow_greater = true
+allow_lesser = true
+show_percentage = false
+
+[node name="BarraMunicion" type="TextureProgressBar" parent="."]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+texture_progress = ExtResource("2_akyir")
 
 [connection signal="pressed" from="Interfaz/GameOverPanel/Button" to="." method="_on_button_pressed"]

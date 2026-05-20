@@ -29,7 +29,6 @@ var is_invincible: bool = false
 # --- REFERENCIAS A NODOS ---
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
-
 func _ready() -> void:
 	current_health = max_health
 	current_ammo = MAX_AMMO
@@ -47,6 +46,9 @@ func _physics_process(delta: float) -> void:
 			sprite.play("hurt")
 		move_and_slide()
 		return
+
+	# Si está herido (is_hurting), YA NO congelamos la velocity a cero.
+	# Dejamos que el código de abajo calcule la dirección para que puedas huir.
 
 	# 2. MOVIMIENTO
 	if shoot_timer > 0.0:
@@ -90,6 +92,7 @@ func _physics_process(delta: float) -> void:
 			elif direction.x < 0: sprite.flip_h = true
 
 	update_animations(direction, shoot_dir)
+
 func shoot(dir: Vector2) -> void:
 	if is_reloading: 
 		return
@@ -110,7 +113,6 @@ func shoot(dir: Vector2) -> void:
 		
 		get_tree().current_scene.add_child(bullet)
 
-
 func start_reload() -> void:
 	if is_reloading or current_ammo == MAX_AMMO or is_dead:
 		return
@@ -121,14 +123,27 @@ func start_reload() -> void:
 
 func take_grab_damage(amount: int) -> void:
 	if is_dead: return
+	
 	current_health -= amount
 	is_grabbed = false
 	is_invincible = true
-	if current_health <= 0: die()
+	
+	# --- CORRECCIÓN: Avisamos al HUD INMEDIATAMENTE antes de que el código se pause con el await ---
+	var hud = get_tree().current_scene.find_child("HUD", true, false)
+	if hud and hud.has_method("mostrar_daño"):
+		hud.mostrar_daño()
+		
+	if current_health <= 0: 
+		die()
 	else:
 		is_hurting = true
-		if sprite: sprite.play("hurt")
-		await get_tree().create_timer(2.0).timeout
+		if sprite: 
+			sprite.stop() # Reiniciamos la animación a la fuerza por si se había quedado congelada
+			sprite.play("hurt")
+			
+		# Nos quedamos aturdidos estos 0.8 segundos
+		await get_tree().create_timer(0.8).timeout
+		
 		is_invincible = false
 		is_hurting = false
 
@@ -137,13 +152,28 @@ func die() -> void:
 	if sprite: sprite.play("dead")
 
 func update_animations(direction: Vector2, shoot_dir: Vector2) -> void:
-	if not sprite or is_dead or is_hurting or is_reloading:
-		if is_reloading and sprite: sprite.play("reload")
+	if not sprite or is_dead:
 		return
-	if shoot_dir != Vector2.ZERO: sprite.play("shoot")
-	elif direction != Vector2.ZERO: sprite.play("run")
-	else: sprite.play("idle")
+
+	# PRIORIDAD 1: Si estamos heridos, forzamos la animación de daño aunque nos movamos
+	if is_hurting:
+		if sprite.animation != "hurt":
+			sprite.play("hurt")
+		return # Corta aquí: impide que se reproduzcan 'run' o 'idle'
+
+	# PRIORIDAD 2: Recarga
+	if is_reloading:
+		sprite.play("reload")
+		return
+
+	# PRIORIDAD 3: Movimiento y Disparo normal
+	if shoot_dir != Vector2.ZERO: 
+		sprite.play("shoot")
+	elif direction != Vector2.ZERO: 
+		sprite.play("run")
+	else: 
+		sprite.play("idle")
 
 func upgrade_damage(amount: int):
-	var daño_anterior = damage
+	var _daño_anterior = damage # Se añade el guion bajo para eliminar el warning de la consola
 	damage += amount

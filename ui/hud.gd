@@ -1,56 +1,53 @@
 extends CanvasLayer
 
-# --- REFERENCIAS DE LA INTERFAZ ---
-@onready var label_vida: Label = $Interfaz/LabelVida
-@onready var label_monedas: Label = $Interfaz/LabelMonedas
-@onready var label_municion: Label = $Interfaz/LabelMunicion
-@onready var label_ronda: Label = $Interfaz/LabelRonda
+@onready var jugador = get_tree().current_scene.find_child("Player", true, false)
+@onready var wave_manager = get_tree().current_scene.find_child("WaveManager", true, false)
 
-# 🆕 REFERENCIA AL PANEL DE GAME OVER
-@onready var game_over_panel: Panel = $Interfaz/GameOverPanel
-
-var player: CharacterBody2D = null
-var wave_manager: Node2D = null
+# Referencias a tus nuevos nodos visuales
+@onready var barra_vida = $Interfaz/MarcoVida/BarraVida
+@onready var barra_municion = $BarraMunicion
+@onready var label_monedas = $Interfaz/LabelMonedas
+@onready var label_ronda = $Interfaz/LabelRonda
 
 func _ready() -> void:
-	player = get_tree().current_scene.find_child("Player", true, false)
-	wave_manager = get_tree().current_scene.find_child("WaveManager", true, false)
-	
-	# Nos aseguramos de que el panel empiece oculto al reiniciar
-	if game_over_panel:
-		game_over_panel.visible = false
+	if barra_vida:
+		print("HUD: ¡He encontrado la barra de vida! Su nombre es: ", barra_vida.name)
+		print("HUD: Su valor actual es: ", barra_vida.value)
+	else:
+		print("HUD: ¡ERROR! No encuentro ninguna barra de vida.")
+	if jugador:
+		barra_vida.value = jugador.current_health
+		# Comprobamos si el nodo existe antes de intentar cambiarle el valor
+		if barra_vida:
+			barra_vida.max_value = jugador.max_health
+			barra_vida.value = jugador.current_health
+		else:
+			push_error("¡Cuidado! No encontré el nodo BarraVida en la escena.")
+			
+		if barra_municion:
+			barra_municion.max_value = jugador.MAX_AMMO
+			barra_municion.value = jugador.current_ammo
+		else:
+			push_error("¡Cuidado! No encontré el nodo BarraMunicion en la escena.")
 
 func _process(_delta: float) -> void:
-	# 1. ACTUALIZAR JUGADOR Y COMPROBAR MUERTE
-	if player:
-		if label_vida:
-			label_vida.text = "❤️ VIDA: " + str(player.current_health)
-		if label_monedas:
-			label_monedas.text = "🪙 MONEDAS: " + str(player.coins)
-		if label_municion:
-			label_municion.text = "💥 BALAS: " + str(player.current_ammo) + " / " + str(player.MAX_AMMO)
+	if jugador:
+		# Actualizamos las barras de forma fluida
+		barra_vida.value = jugador.current_health
+		barra_municion.value = jugador.current_ammo
+		
+		# Actualizamos texto de monedas
+		label_monedas.text = "MONEDAS: " + str(jugador.coins)
 
-		# 💀 SI EL JUGADOR SE QUEDA SIN VIDA: Activamos el Game Over
-		if player.current_health <= 0 and game_over_panel and not game_over_panel.visible:
-			activa_game_over()
-
-	# 2. ACTUALIZAR RONDAS
-# 2. ACTUALIZAR RONDAS
 	if wave_manager:
-		if label_ronda:
-			# Leemos 'ronda_actual' del nuevo WaveManager
-			label_ronda.text = "🚩 RONDA: " + str(wave_manager.ronda_actual) + " / 10"
-			
-			# Si supera la ronda 10, puedes activar la victoria si quieres
-			if wave_manager.ronda_actual > 10:
-				label_ronda.text = "🏆 ¡VICTORIA TOTAL! 🏆"
-
-# 🆕 FUNCIÓN QUE DETIENE EL JUEGO AL MORIR
-func activa_game_over() -> void:
-	game_over_panel.visible = true
-	get_tree().paused = true # Pausamos el motor para que los zombis no sigan moviéndose
-
-# 🆕 FUNCIÓN PARA EL BOTÓN DE REINICIAR
-func _on_button_pressed() -> void:
-	get_tree().paused = false # Despausamos el juego indispensablemente
-	get_tree().change_scene_to_file("res://menu_inicio.tscn")
+		label_ronda.text = "RONDA: " + str(wave_manager.ronda_actual)
+		
+# Llámalo desde el script del jugador cuando reciba daño
+func mostrar_daño():
+	var tween = create_tween()
+	# Guardamos el color rojo original que le hayas puesto en el editor
+	var color_original = Color(1, 0, 0) # Ajusta este color al rojo exacto de tu barra
+	# Parpadea a blanco brillante/dorado instantáneamente
+	barra_vida.modulate = Color(2, 2, 2) # Multiplicar por encima de 1 da un efecto de brillo (HDR)
+	# Vuelve suavemente a su color rojo en 0.2 segundos
+	tween.tween_property(barra_vida, "modulate", color_original, 0.2)
