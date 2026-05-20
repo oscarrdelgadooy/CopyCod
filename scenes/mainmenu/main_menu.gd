@@ -1,45 +1,54 @@
 extends Node2D
 
-# Buscamos los nodos dentro del VBoxContainer automáticamente
-@onready var selector_dificultad = find_child("OptionButton", true, false)
-@onready var boton_jugar = find_child("BotonJugar", true, false)
-@onready var boton_salir = find_child("BotonSalir", true, false)
+var selector_dificultad: OptionButton = null
+var boton_jugar: Button = null
+var boton_salir: Button = null
 
 func _ready() -> void:
+	# 1. Recuperamos las referencias de los nodos de la interfaz
+	selector_dificultad = find_child("OptionDifficulty", true, false) as OptionButton
+	boton_jugar = find_child("BotonJugar", true, false) as Button
+	boton_salir = find_child("BotonSalir", true, false) as Button
+	
+	# 2. Inicialización del selector de dificultad
 	if selector_dificultad:
 		selector_dificultad.clear()
+		selector_dificultad.add_item("Fácil")   # Índice 0
+		selector_dificultad.add_item("Normal")  # Índice 1
+		selector_dificultad.add_item("Difícil") # Índice 2
 		
-		# Añadimos las opciones en orden estricto
-		selector_dificultad.add_item("Fácil")   # Posición 0
-		selector_dificultad.add_item("Normal")  # Posición 1
-		selector_dificultad.add_item("Difícil") # Posición 2
+		# Selección por defecto (Normal) y configuración inicial en el Autoload
+		selector_dificultad.selected = 1
+		_actualizar_dificultad_global(1)
 		
-		# ¡Aquí está la magia! El 1 le dice a Godot que preseleccione "Normal"
-		selector_dificultad.select(1)
-		
-	# Conexiones de tus botones...
-	if boton_jugar:
-		boton_jugar.pressed.connect(_on_boton_jugar_pressed)
-	if boton_salir:
-		boton_salir.pressed.connect(_on_boton_salir_pressed)
-func _on_boton_jugar_pressed() -> void:
-	var multiplicador: float = 1.0
-	
-	if selector_dificultad:
-		# Leemos cuál está seleccionado actualmente en el menú
-		var indice = selector_dificultad.selected
-		match indice:
-			0: multiplicador = 0.7  # Fácil
-			1: multiplicador = 1.0  # Normal
-			2: multiplicador = 1.5  # Difícil
-	
-	# Guardamos de forma segura en el Autoload Global
-	if has_node("/root/Global"):
-		get_node("/root/Global").multiplicador_dificultad = multiplicador
-		print("Dificultad guardada. Multiplicador: ", multiplicador)
-	
-	# Cambiamos a tu juego (Reemplaza con el nombre exacto de tu escena principal)
-	get_tree().change_scene_to_file("res://EscenaPrincipal.tscn")
+		# Conexión del evento de cambio de opción
+		if not selector_dificultad.item_selected.is_connected(_on_opcion_cambiada):
+			selector_dificultad.item_selected.connect(_on_opcion_cambiada)
 
-func _on_boton_salir_pressed() -> void:
+	# 3. Conexión de los eventos de los botones
+	if boton_jugar and not boton_jugar.pressed.is_connected(_on_jugar_pulsado):
+		boton_jugar.pressed.connect(_on_jugar_pulsado)
+		
+	if boton_salir and not boton_salir.pressed.is_connected(_on_salir_pulsado):
+		boton_salir.pressed.connect(_on_salir_pulsado)
+
+func _on_opcion_cambiada(index: int) -> void:
+	_actualizar_dificultad_global(index)
+
+func _actualizar_dificultad_global(index: int) -> void:
+	var valor_multiplicador: float = 1.0
+	match index:
+		0: valor_multiplicador = 0.7  # Fácil
+		1: valor_multiplicador = 1.0  # Normal
+		2: valor_multiplicador = 1.5  # Difícil
+		
+	if has_node("/root/Global"):
+		get_node("/root/Global").multiplicador_dificultad = valor_multiplicador
+
+func _on_jugar_pulsado() -> void:
+	# Cambia a la escena principal para iniciar la partida
+	get_tree().change_scene_to_file("res://scenes/map/map.tscn")
+
+func _on_salir_pulsado() -> void:
+	# Cierra la aplicación de forma segura
 	get_tree().quit()
