@@ -14,6 +14,7 @@ extends CanvasLayer
 @onready var label_daño =  $"Interfaz/PanelEstadisticas/VBoxContainer/FilaDaño/LabelDaño"
 @onready var label_velocidad = $Interfaz/PanelEstadisticas/VBoxContainer/FilaVelocidad/LabelVelocidad
 @onready var label_cadencia = $Interfaz/PanelEstadisticas/VBoxContainer/FilaCadencia/LabelCadencia
+@onready var label_ronda = $Interfaz/PanelEstadisticas/VBoxContainer/FilaRonda/LabelRonda
 @onready var label_municion = $Interfaz/LabelMunicion
 
 var monedas_visuales: int = 0
@@ -71,6 +72,9 @@ func _process(delta: float) -> void:
 			
 		if label_municion:
 			label_municion.text = str(jugador.current_ammo) + " / " + str(jugador.MAX_AMMO)
+		
+		if label_ronda:
+			label_ronda.text = str(wave_manager.ronda_actual)
 
 func actualizar_monedas_con_animacion() -> void:
 	label_monedas.text = str(monedas_visuales)

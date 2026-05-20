@@ -15,4 +15,4 @@ func mostrar_game_over() -> void:
 
 func _on_volver_menu_pressed() -> void:
 	get_tree().paused = false # Despausamos antes de cambiar
-	get_tree().change_scene_to_file("res://MenuInicio.tscn")
+	get_tree().change_scene_to_file("res://scenes/mainmenu/main_menu.tscn")
