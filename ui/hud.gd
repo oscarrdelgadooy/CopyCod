@@ -9,8 +9,15 @@ extends CanvasLayer
 @onready var icono_moneda = $Interfaz/ContenedorMonedas/EspacioIcono/IconoMoneda
 @onready var label_anuncio_ronda = $Interfaz/LabelAnuncioRonda
 
-# Guardamos las monedas actuales para saber cuándo cambia el valor y animar
+# --- REFERENCIAS DE LAS ESTADÍSTICAS ---
+@onready var label_kills = $Interfaz/PanelEstadisticas/VBoxContainer/FilaKills/LabelKills
+@onready var label_tiempo = $Interfaz/PanelEstadisticas/VBoxContainer/FilaTiempo/LabelTiempo
+@onready var label_daño =  $"Interfaz/PanelEstadisticas/VBoxContainer/FilaDaño/LabelDaño"
+@onready var label_velocidad = $Interfaz/PanelEstadisticas/VBoxContainer/FilaVelocidad/LabelVelocidad
+@onready var label_cadencia = $Interfaz/PanelEstadisticas/VBoxContainer/FilaCadencia/LabelCadencia
+
 var monedas_visuales: int = 0
+var tiempo_partida: float = 0.0 
 
 func _ready() -> void:
 	if jugador:
@@ -20,46 +27,49 @@ func _ready() -> void:
 		monedas_visuales = jugador.coins
 		label_monedas.text = str(monedas_visuales)
 	
-	# Forzamos que el cartel empiece invisible nada más cargar el juego
 	if label_anuncio_ronda:
 		label_anuncio_ronda.modulate.a = 0.0
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if jugador:
 		if barra_vida:
 			barra_vida.value = jugador.current_health
 		if barra_municion:
 			barra_municion.value = jugador.current_ammo
 		
-		# Si las monedas del jugador cambian, lanzamos la animación del latido
 		if jugador.coins != monedas_visuales:
 			monedas_visuales = jugador.coins
 			actualizar_monedas_con_animacion()
+			
+		# --- ACTUALIZACIÓN DE ESTADÍSTICAS CON TUS VARIABLES REALES ---
+		if label_kills:
+			label_kills.text = "ZOMBIS: " + str(jugador.kills)
+			
+		if label_tiempo:
+			tiempo_partida += delta 
+			var minutos = int(tiempo_partida) / 60
+			var segundos = int(tiempo_partida) % 60
+			label_tiempo.text = "TIEMPO: %02d:%02d" % [minutos, segundos]
+			
+		if label_daño:
+			# Usamos tu variable 'damage'
+			label_daño.text = "DAÑO: " + str(jugador.damage)
+			
+		if label_velocidad:
+			# Usamos tu variable 'speed'
+			label_velocidad.text = "VEL: " + str(jugador.speed)
+			
+		if label_cadencia:
+			label_cadencia.text = "Cadencia " + str(jugador.shoot_cooldown * 100)
 
-# --- ANIMACIÓN DEL ICONO DE LA MONEDA ---
-# --- MODIFICADO: Ahora solo cambia el número, no toca el sprite ---
 func actualizar_monedas_con_animacion() -> void:
 	label_monedas.text = str(monedas_visuales)
 
-# --- ANIMACIÓN DE 3 SEGUNDOS PARA LA RONDA ---
 func animar_nueva_ronda(numero_ronda: int) -> void:
-	print("!!! EL HUD RECIBE LA ORDEN DE ANIMAR LA RONDA: ", numero_ronda) # <--- AÑADE ESTO
-	if not label_anuncio_ronda: 
-		return
-	
-	# Cambiamos el texto al de la ronda actual
+	if not label_anuncio_ronda: return
 	label_anuncio_ronda.text = "RONDA " + str(numero_ronda)
-	
-	# Aseguramos que empiece invisible
 	label_anuncio_ronda.modulate.a = 0.0
-	
 	var tween = create_tween()
-	
-	# 1. APARECE: Se vuelve opaco de forma suave en 0.3 segundos
 	tween.tween_property(label_anuncio_ronda, "modulate:a", 1.0, 0.3)
-	
-	# 2. ESPERA: Se queda estático en pantalla durante 2.4 segundos
 	tween.tween_interval(2.4)
-	
-	# 3. DESAPARECE: Se desvanece por completo en 0.3 segundos (Total: 3.0 segundos)
 	tween.tween_property(label_anuncio_ronda, "modulate:a", 0.0, 0.3)

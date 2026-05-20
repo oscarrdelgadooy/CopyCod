@@ -1,9 +1,13 @@
-[gd_scene load_steps=26 format=3 uid="uid://bvjf36s62h6qm"]
+[gd_scene load_steps=31 format=3 uid="uid://bvjf36s62h6qm"]
 
 [ext_resource type="Script" path="res://ui/hud.gd" id="1_l4qoo"]
-[ext_resource type="Texture2D" uid="uid://dvj6e6tms11p5" path="res://ui/UI_Flat_BarFill01d.png" id="2_akyir"]
 [ext_resource type="Texture2D" uid="uid://cf2p7ht16vw4" path="res://ui/coin1_16x16.png" id="2_jwx2n"]
 [ext_resource type="Script" path="res://ui/icono_moneda.gd" id="3_06ymd"]
+[ext_resource type="Texture2D" uid="uid://djqap82d3p7dx" path="res://ui/daño.png" id="4_jvoiy"]
+[ext_resource type="Texture2D" uid="uid://b4345fi8repku" path="res://ui/velocidad.png" id="5_yto5f"]
+[ext_resource type="Texture2D" uid="uid://dpkqmjosh6jjg" path="res://ui/cadencia.png" id="6_gcdrb"]
+[ext_resource type="Texture2D" uid="uid://bvjn4w5akt5as" path="res://ui/tiempo.png" id="7_y72hk"]
+[ext_resource type="Texture2D" uid="uid://cu0nafuklh5a8" path="res://ui/kill.png" id="8_5clbb"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kmy3r"]
 bg_color = Color(0, 0, 0, 0.773)
@@ -147,6 +151,13 @@ font_color = Color(0.541027, 0.266172, 0, 1)
 font_size = 80
 font_color = Color(0.793701, 0, 0.0474378, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vm88x"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0, 0, 0, 0.341)
+
 [node name="Hud" type="CanvasLayer"]
 process_mode = 3
 script = ExtResource("1_l4qoo")
@@ -258,10 +269,67 @@ grow_vertical = 2
 text = "RONDA: 1"
 label_settings = SubResource("LabelSettings_ks2f3")
 
-[node name="BarraMunicion" type="TextureProgressBar" parent="."]
-visible = false
-offset_right = 40.0
-offset_bottom = 40.0
-texture_progress = ExtResource("2_akyir")
+[node name="PanelEstadisticas" type="PanelContainer" parent="Interfaz"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -214.0
+offset_right = 177.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_vm88x")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Interfaz/PanelEstadisticas"]
+layout_mode = 2
+
+[node name="FilaDaño" type="HBoxContainer" parent="Interfaz/PanelEstadisticas/VBoxContainer"]
+layout_mode = 2
+
+[node name="IconoDaño" type="TextureRect" parent="Interfaz/PanelEstadisticas/VBoxContainer/FilaDaño"]
+layout_mode = 2
+texture = ExtResource("4_jvoiy")
+
+[node name="LabelDaño" type="Label" parent="Interfaz/PanelEstadisticas/VBoxContainer/FilaDaño"]
+layout_mode = 2
+
+[node name="FilaVelocidad" type="HBoxContainer" parent="Interfaz/PanelEstadisticas/VBoxContainer"]
+layout_mode = 2
+
+[node name="IconoVelocidad" type="TextureRect" parent="Interfaz/PanelEstadisticas/VBoxContainer/FilaVelocidad"]
+layout_mode = 2
+texture = ExtResource("5_yto5f")
+
+[node name="LabelVelocidad" type="Label" parent="Interfaz/PanelEstadisticas/VBoxContainer/FilaVelocidad"]
+layout_mode = 2
+
+[node name="FilaCadencia" type="HBoxContainer" parent="Interfaz/PanelEstadisticas/VBoxContainer"]
+layout_mode = 2
+
+[node name="IconoCadencia" type="TextureRect" parent="Interfaz/PanelEstadisticas/VBoxContainer/FilaCadencia"]
+layout_mode = 2
+texture = ExtResource("6_gcdrb")
+
+[node name="LabelCadencia" type="Label" parent="Interfaz/PanelEstadisticas/VBoxContainer/FilaCadencia"]
+layout_mode = 2
+
+[node name="FilaTiempo" type="HBoxContainer" parent="Interfaz/PanelEstadisticas/VBoxContainer"]
+layout_mode = 2
+
+[node name="IconoTiempo" type="TextureRect" parent="Interfaz/PanelEstadisticas/VBoxContainer/FilaTiempo"]
+layout_mode = 2
+texture = ExtResource("7_y72hk")
+
+[node name="LabelTiempo" type="Label" parent="Interfaz/PanelEstadisticas/VBoxContainer/FilaTiempo"]
+layout_mode = 2
+
+[node name="FilaKills" type="HBoxContainer" parent="Interfaz/PanelEstadisticas/VBoxContainer"]
+layout_mode = 2
+
+[node name="IconoKills" type="TextureRect" parent="Interfaz/PanelEstadisticas/VBoxContainer/FilaKills"]
+layout_mode = 2
+texture = ExtResource("8_5clbb")
+
+[node name="LabelKills" type="Label" parent="Interfaz/PanelEstadisticas/VBoxContainer/FilaKills"]
+layout_mode = 2
 
 [connection signal="pressed" from="Interfaz/GameOverPanel/Button" to="." method="_on_button_pressed"]

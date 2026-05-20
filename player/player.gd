@@ -21,6 +21,7 @@ var is_reloading: bool = false
 var is_dead: bool = false
 var is_hurting: bool = false
 var shoot_timer: float = 0.0
+var kills: int = 0 # Guarda cuántos zombis ha matado el jugador
 
 # --- VARIABLES DE AGARRE ZOMBI ---
 var is_grabbed: bool = false

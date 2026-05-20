@@ -100,6 +100,7 @@ func die() -> void:
 	# Damos las monedas
 	if player: 
 		player.coins += 2 
+		player.kills += 1
 	
 	# Borramos las colisiones para que no estorben en el suelo
 	if has_node("CollisionShape2D"): $CollisionShape2D.queue_free()
