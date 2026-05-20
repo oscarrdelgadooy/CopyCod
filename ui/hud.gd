@@ -6,7 +6,7 @@ extends CanvasLayer
 # Referencias a tus nuevos nodos visuales
 @onready var barra_vida = $Interfaz/MarcoVida/BarraVida
 @onready var barra_municion = $BarraMunicion
-@onready var label_monedas = $Interfaz/LabelMonedas
+@onready var label_monedas = $Interfaz/ContenedorMonedas/LabelMonedas
 @onready var label_ronda = $Interfaz/LabelRonda
 
 func _ready() -> void:
@@ -37,7 +37,7 @@ func _process(_delta: float) -> void:
 		barra_municion.value = jugador.current_ammo
 		
 		# Actualizamos texto de monedas
-		label_monedas.text = "MONEDAS: " + str(jugador.coins)
+		label_monedas.text = str(jugador.coins)
 
 	if wave_manager:
 		label_ronda.text = "RONDA: " + str(wave_manager.ronda_actual)
