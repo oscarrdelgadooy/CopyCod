@@ -37,13 +37,9 @@ func _process(_delta: float) -> void:
 			actualizar_monedas_con_animacion()
 
 # --- ANIMACIÓN DEL ICONO DE LA MONEDA ---
+# --- MODIFICADO: Ahora solo cambia el número, no toca el sprite ---
 func actualizar_monedas_con_animacion() -> void:
 	label_monedas.text = str(monedas_visuales)
-	var tween = create_tween()
-	tween.parallel().tween_property(icono_moneda, "scale", Vector2(1.3, 1.3), 0.1).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.parallel().tween_property(icono_moneda, "rotation", deg_to_rad(10), 0.1)
-	tween.parallel().tween_property(icono_moneda, "scale", Vector2(1.0, 1.0), 0.15)
-	tween.parallel().tween_property(icono_moneda, "rotation", 0.0, 0.15)
 
 # --- ANIMACIÓN DE 3 SEGUNDOS PARA LA RONDA ---
 func animar_nueva_ronda(numero_ronda: int) -> void:
