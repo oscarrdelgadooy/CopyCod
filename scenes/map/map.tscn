@@ -97,7 +97,7 @@ bullet_scene = ExtResource("3_nkjdp")
 
 [node name="Mercader" parent="." instance=ExtResource("3_lyd8q")]
 process_mode = 3
-position = Vector2(264, 269)
+position = Vector2(327, 122)
 
 [node name="WaveManager" type="Node2D" parent="."]
 script = ExtResource("5_tbdxw")
