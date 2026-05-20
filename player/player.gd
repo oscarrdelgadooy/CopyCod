@@ -149,8 +149,31 @@ func take_grab_damage(amount: int) -> void:
 		is_hurting = false
 
 func die() -> void:
+	if is_dead: return
 	is_dead = true
-	if sprite: sprite.play("dead")
+	
+	# 1. Apagamos controles físicos inmediatamente
+	set_physics_process(false)
+	$CollisionShape2D.set_deferred("disabled", true)
+	
+	# 2. Reproducimos animación
+	if sprite and sprite.sprite_frames.has_animation("dead"):
+		sprite.play("dead")
+	
+	# 3. ¡ESPERA A QUE LA ANIMACIÓN TERMINE!
+	# Esto es vital. Si tu animación dura 0.8s, espera 0.8s antes de pausar todo
+	await get_tree().create_timer(0.8).timeout
+	
+	sprite.stop()
+	sprite.visible = false
+	# 4. Ahora sí, llamamos al Game Over
+	var game_over_ui = get_tree().current_scene.find_child("GameOverUI", true, false)
+	print(game_over_ui)
+	if game_over_ui:
+		game_over_ui.mostrar_game_over()
+	else:
+		# Si sigue saliendo null, esto nos dirá qué está pasando
+		print("¡ERROR! No encuentro 'GameOverUI'. ¿Se llama igual en el árbol de escenas?")
 
 func update_animations(direction: Vector2, shoot_dir: Vector2) -> void:
 	if not sprite or is_dead:

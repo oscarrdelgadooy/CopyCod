@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c5vnhvvatwk2q"]
+[gd_scene load_steps=7 format=3 uid="uid://0v5j3bfsyk6l"]
 
 [ext_resource type="Script" path="res://mercader/tienda_ui.gd" id="1_l047l"]
 [ext_resource type="Texture2D" uid="uid://djqap82d3p7dx" path="res://ui/daño.png" id="2_oj2g5"]

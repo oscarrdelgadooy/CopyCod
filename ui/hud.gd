@@ -31,6 +31,12 @@ func _ready() -> void:
 		label_anuncio_ronda.modulate.a = 0.0
 
 func _process(delta: float) -> void:
+	if not is_instance_valid(jugador):
+		# El jugador ya fue borrado, no intentamos leer su vida
+		# Puedes aprovechar para poner la barra a cero si quieres
+		if barra_vida: barra_vida.value = 0
+		return
+	
 	if jugador:
 		if barra_vida:
 			barra_vida.value = jugador.current_health

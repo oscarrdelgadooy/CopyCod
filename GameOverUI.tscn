@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://bt75jylxcq6v8"]
+
+[ext_resource type="Script" path="res://gameoverui.gd" id="1_43101"]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+script = ExtResource("1_43101")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0, 0, 0, 0.173)
+
+[node name="BotonVolverMenu" type="Button" parent="."]
+offset_left = 381.0
+offset_top = 477.0
+offset_right = 714.0
+offset_bottom = 518.0
+text = "Volver al inicio"
+
+[node name="Label" type="Label" parent="."]
+offset_left = 379.0
+offset_top = 150.0
+offset_right = 701.0
+offset_bottom = 219.0
+theme_override_font_sizes/font_size = 50
+text = "HAS MUERTO"

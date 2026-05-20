@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bldgm7omcxuqb" path="res://zombie/zombie_fast.tscn" id="4_2y6dg"]
 [ext_resource type="Script" path="res://scenes/map/wave_manager.gd" id="5_tbdxw"]
 [ext_resource type="PackedScene" uid="uid://bvjf36s62h6qm" path="res://ui/hud.tscn" id="6_6f0bp"]
-[ext_resource type="PackedScene" uid="uid://c5vnhvvatwk2q" path="res://tienda_ui.tscn" id="7_q1fji"]
+[ext_resource type="PackedScene" uid="uid://0v5j3bfsyk6l" path="res://tienda_ui.tscn" id="7_q1fji"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o3rex"]
 size = Vector2(0, 648)

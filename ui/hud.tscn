@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://bvjf36s62h6qm"]
+[gd_scene load_steps=33 format=3 uid="uid://bvjf36s62h6qm"]
 
 [ext_resource type="Script" path="res://ui/hud.gd" id="1_l4qoo"]
 [ext_resource type="Texture2D" uid="uid://cf2p7ht16vw4" path="res://ui/coin1_16x16.png" id="2_jwx2n"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dpkqmjosh6jjg" path="res://ui/cadencia.png" id="6_gcdrb"]
 [ext_resource type="Texture2D" uid="uid://bvjn4w5akt5as" path="res://ui/tiempo.png" id="7_y72hk"]
 [ext_resource type="Texture2D" uid="uid://cu0nafuklh5a8" path="res://ui/kill.png" id="8_5clbb"]
+[ext_resource type="PackedScene" uid="uid://bt75jylxcq6v8" path="res://GameOverUI.tscn" id="9_3xxpu"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ieho8"]
 
@@ -326,5 +327,7 @@ texture = ExtResource("8_5clbb")
 
 [node name="LabelKills" type="Label" parent="Interfaz/PanelEstadisticas/VBoxContainer/FilaKills"]
 layout_mode = 2
+
+[node name="GameOverUI" parent="Interfaz" instance=ExtResource("9_3xxpu")]
 
 [connection signal="pressed" from="Interfaz/GameOverPanel/Button" to="." method="_on_button_pressed"]

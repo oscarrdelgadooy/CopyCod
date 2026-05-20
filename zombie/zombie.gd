@@ -42,8 +42,7 @@ func _physics_process(_delta: float) -> void:
 	if is_dead or is_currently_grabbing:
 		return
 
-	if player and not player.is_dead: 
-		
+	if player and not player.is_dead:
 		# 1. ¿ESTOY LO SUFICIENTEMENTE CERCA?
 		if is_player_in_range():
 			
