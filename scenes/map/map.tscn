@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://iq4u4rrsrmmi"]
+[gd_scene load_steps=12 format=3 uid="uid://iq4u4rrsrmmi"]
 
 [ext_resource type="Texture2D" uid="uid://b1bcqwlv4dcsx" path="res://assets/game_background_1.png" id="1_qms4h"]
 [ext_resource type="PackedScene" uid="uid://cswj4w2trxjat" path="res://player/player.tscn" id="2_tpqal"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://scenes/map/wave_manager.gd" id="5_tbdxw"]
 [ext_resource type="PackedScene" uid="uid://bvjf36s62h6qm" path="res://ui/hud.tscn" id="6_6f0bp"]
 [ext_resource type="PackedScene" uid="uid://0v5j3bfsyk6l" path="res://tienda_ui.tscn" id="7_q1fji"]
+[ext_resource type="AudioStream" uid="uid://c2x2sh8opo6s2" path="res://sfx/battle_fight.mp3" id="10_84lxa"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o3rex"]
 size = Vector2(0, 648)
@@ -114,3 +115,7 @@ offset = Vector2(450, 450)
 transform = Transform2D(1, 0, 0, 1, 450, 450)
 
 [node name="Hud" parent="." instance=ExtResource("6_6f0bp")]
+
+[node name="MusicaFondo" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("10_84lxa")
+volume_db = -5.0

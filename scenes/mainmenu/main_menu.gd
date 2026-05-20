@@ -38,7 +38,7 @@ func _on_opcion_cambiada(index: int) -> void:
 func _actualizar_dificultad_global(index: int) -> void:
 	var valor_multiplicador: float = 1.0
 	match index:
-		0: valor_multiplicador = 0.7  # Fácil
+		0: valor_multiplicador = 0.5  # Fácil
 		1: valor_multiplicador = 1.0  # Normal
 		2: valor_multiplicador = 1.5  # Difícil
 		

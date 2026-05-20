@@ -16,6 +16,8 @@ extends CanvasLayer
 @onready var label_cadencia = $FondoTienda/VBoxContainer/FilaCadencia/LabelCadencia
 @onready var label_vida = $FondoTienda/VBoxContainer/FilaVida/LabelVida
 
+@onready var sfx_compra = $SfxCompra
+
 # --- PRECIOS BASE ---
 var precio_dano: int = 10
 var precio_velocidad: int = 8
@@ -67,6 +69,8 @@ func actualizar_textos() -> void:
 		else:
 			boton_cadencia.text = "MÁXIMO"
 			boton_cadencia.disabled = true
+			
+	if sfx_compra: sfx_compra.play()
 
 # --- LÓGICA DE COMPRAS ---
 func _on_boton_dano_pressed() -> void:
@@ -74,6 +78,7 @@ func _on_boton_dano_pressed() -> void:
 		jugador.coins -= precio_dano
 		jugador.damage += 5
 		precio_dano = int(precio_dano * 1.5)
+		
 		actualizar_textos()
 	else:
 		print("Monedas insuficientes.")

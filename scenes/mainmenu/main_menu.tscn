@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://cg6rsopsx2m72"]
+[gd_scene load_steps=10 format=3 uid="uid://cg6rsopsx2m72"]
 
 [ext_resource type="Script" path="res://scenes/mainmenu/main_menu.gd" id="1_48pjh"]
 [ext_resource type="Texture2D" uid="uid://b1bcqwlv4dcsx" path="res://assets/game_background_1.png" id="1_ksc5d"]
 [ext_resource type="Shader" path="res://scenes/mainmenu/main_menu.gdshader" id="2_mpg67"]
 [ext_resource type="Texture2D" uid="uid://bqntfex6nnqmx" path="res://assets/UI_Flat_Banner01a.png" id="3_h1gmh"]
 [ext_resource type="Texture2D" uid="uid://bvwyb8wygqyi7" path="res://assets/UI_Flat_Bar10a.png" id="4_2jesn"]
+[ext_resource type="AudioStream" uid="uid://b3a3sumy58w4x" path="res://sfx/menu_music.mp3" id="6_umeyh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4kk2f"]
 shader = ExtResource("2_mpg67")
@@ -81,3 +82,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StyleBoxEmpty_jxdei")
 text = "SALIR DEL JUEGO"
+
+[node name="MusicaFondo" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_umeyh")
+volume_db = -8.0

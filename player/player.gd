@@ -9,6 +9,9 @@ extends CharacterBody2D
 @export var bullet_spawn_distance: float = 35.0
 @export var bullet_y_offset: float = 25.0 # Pixeles hacia abajo para centrar el arma
 
+@onready var sfx_disparo = $SfxDisparo
+@onready var sfx_muerte = $SfxMuerte
+
 # --- VARIABLES DE ESTADO INTERNO ---
 var current_health: int = max_health
 var current_ammo: int = 8
@@ -104,6 +107,9 @@ func shoot(dir: Vector2) -> void:
 	current_ammo -= 1
 	if bullet_scene:
 		var bullet = bullet_scene.instantiate()
+		if sfx_disparo:
+			sfx_disparo.play()
+		
 		bullet.damage = damage
 		bullet.rotation = dir.angle()
 		# Calculamos el origen bajando unos píxeles en el eje Y
@@ -159,6 +165,7 @@ func die() -> void:
 	# 2. Reproducimos animación
 	if sprite and sprite.sprite_frames.has_animation("dead"):
 		sprite.play("dead")
+		sfx_muerte.play()
 	
 	# 3. ¡ESPERA A QUE LA ANIMACIÓN TERMINE!
 	# Esto es vital. Si tu animación dura 0.8s, espera 0.8s antes de pausar todo

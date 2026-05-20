@@ -99,6 +99,8 @@ alignment = 0
 [node name="LabelCadencia" type="Label" parent="FondoTienda/VBoxContainer/FilaCadencia"]
 layout_mode = 2
 
+[node name="SfxCompra" type="AudioStreamPlayer" parent="."]
+
 [connection signal="pressed" from="FondoTienda/VBoxContainer/FilaDamage/BotonDamage" to="." method="_on_boton_damage_pressed"]
 [connection signal="pressed" from="FondoTienda/VBoxContainer/FilaVelocidad/BotonVelocidad" to="." method="_on_boton_damage_pressed"]
 [connection signal="pressed" from="FondoTienda/VBoxContainer/FilaVida/BotonVida" to="." method="_on_boton_damage_pressed"]

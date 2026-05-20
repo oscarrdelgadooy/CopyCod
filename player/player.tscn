@@ -1,7 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cswj4w2trxjat"]
+[gd_scene load_steps=6 format=3 uid="uid://cswj4w2trxjat"]
 
 [ext_resource type="SpriteFrames" uid="uid://drnpvf6b3jp7l" path="res://player/sprite_frames_player.tres" id="1_8kywk"]
 [ext_resource type="Script" path="res://player/player.gd" id="1_cv08p"]
+[ext_resource type="AudioStream" uid="uid://kerimfb2t1qj" path="res://sfx/Shot_1.wav" id="3_ldjrj"]
+[ext_resource type="AudioStream" uid="uid://25lc36r5p46g" path="res://sfx/death_player.wav" id="4_pvne2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_acrht"]
 size = Vector2(43, 64)
@@ -16,3 +18,11 @@ shape = SubResource("RectangleShape2D_acrht")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("1_8kywk")
 animation = &"reload"
+
+[node name="SfxDisparo" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_ldjrj")
+volume_db = -3.0
+
+[node name="SfxMuerte" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_pvne2")
+volume_db = 2.65

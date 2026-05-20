@@ -9,6 +9,8 @@ var player: CharacterBody2D = null
 var is_dead: bool = false
 var is_currently_grabbing: bool = false 
 
+@onready var sfx_muerte = $SfxMuerte
+
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var hitbox: Area2D = $Hitbox
 
@@ -118,7 +120,9 @@ func die() -> void:
 	# Soltamos al jugador si lo teníamos agarrado
 	if is_currently_grabbing and player and player.is_grabbed:
 		player.is_grabbed = false
-	
+		
+	if sfx_muerte:
+		sfx_muerte.play()
 	# Damos las monedas y sumamos la Kill de forma segura
 	if player: 
 		if "coins" in player:

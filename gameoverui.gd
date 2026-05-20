@@ -9,9 +9,8 @@ func _ready() -> void:
 		boton_menu.pressed.connect(_on_volver_menu_pressed)
 
 func mostrar_game_over() -> void:
-	print("¡EL MENÚ DE MUERTE SE ESTÁ MOSTRANDO!") # Si esto sale, el código va bien
 	self.visible = true
-	get_tree().paused = true
+	get_tree().paused = true # Pausamos el mundo (zombis, jugador, físicas)
 
 func _on_volver_menu_pressed() -> void:
 	get_tree().paused = false # Despausamos antes de cambiar

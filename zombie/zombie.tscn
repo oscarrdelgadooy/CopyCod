@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://6yy1txggadeg"]
+[gd_scene load_steps=41 format=3 uid="uid://6yy1txggadeg"]
 
 [ext_resource type="Script" path="res://zombie/zombie.gd" id="1_00hs2"]
 [ext_resource type="Texture2D" uid="uid://5k7r2w7nq52m" path="res://zombie/Zombie_2/Attack.png" id="2_6sa3v"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cny42l4qxq352" path="res://zombie/Zombie_2/Hurt.png" id="4_umso6"]
 [ext_resource type="Texture2D" uid="uid://cjspipp37xo43" path="res://zombie/Zombie_2/Idle.png" id="5_s1jif"]
 [ext_resource type="Texture2D" uid="uid://b4gc8wqulaxek" path="res://zombie/Zombie_2/Walk.png" id="6_gty8q"]
+[ext_resource type="AudioStream" uid="uid://8rl6cj3swvld" path="res://sfx/death_zombie.wav" id="7_3k82f"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3d8kl"]
 size = Vector2(37, 72)
@@ -269,6 +270,9 @@ frame_progress = 0.32643
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 position = Vector2(-6, 31)
 shape = SubResource("CircleShape2D_55ta3")
+
+[node name="SfxMuerte" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_3k82f")
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
 [connection signal="body_exited" from="Hitbox" to="." method="_on_hitbox_body_exited"]
