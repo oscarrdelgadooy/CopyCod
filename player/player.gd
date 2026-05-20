@@ -7,6 +7,7 @@ extends CharacterBody2D
 @export var shoot_cooldown: float = 0.25
 @export var bullet_scene: PackedScene
 @export var bullet_spawn_distance: float = 35.0
+@export var bullet_y_offset: float = 25.0 # Pixeles hacia abajo para centrar el arma
 
 # --- VARIABLES DE ESTADO INTERNO ---
 var current_health: int = max_health
@@ -50,6 +51,9 @@ func _physics_process(delta: float) -> void:
 	# 2. MOVIMIENTO
 	if shoot_timer > 0.0:
 		shoot_timer -= delta
+		
+	if Input.is_key_pressed(KEY_R) and not is_reloading and current_ammo < MAX_AMMO:
+		start_reload()
 
 	var direction := Vector2.ZERO
 	if Input.is_key_pressed(KEY_W): direction.y -= 1
@@ -86,21 +90,24 @@ func _physics_process(delta: float) -> void:
 			elif direction.x < 0: sprite.flip_h = true
 
 	update_animations(direction, shoot_dir)
-
 func shoot(dir: Vector2) -> void:
-	if is_reloading:
+	if is_reloading: 
 		return
 	if current_ammo <= 0:
 		start_reload()
 		return
 
 	current_ammo -= 1
-	
 	if bullet_scene:
 		var bullet = bullet_scene.instantiate()
 		bullet.damage = damage
 		bullet.rotation = dir.angle()
-		bullet.global_position = global_position + (dir * bullet_spawn_distance)
+		# Calculamos el origen bajando unos píxeles en el eje Y
+		var origen_arma = global_position + Vector2(0, bullet_y_offset)
+		
+		# Movemos la bala hacia la dirección de disparo desde ese nuevo origen
+		bullet.global_position = origen_arma + (dir * bullet_spawn_distance)
+		
 		get_tree().current_scene.add_child(bullet)
 
 
