@@ -1,5 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://cg6rsopsx2m72"]
+[gd_scene load_steps=9 format=3 uid="uid://cg6rsopsx2m72"]
 
+[ext_resource type="Script" path="res://scenes/mainmenu/main_menu.gd" id="1_48pjh"]
 [ext_resource type="Texture2D" uid="uid://b1bcqwlv4dcsx" path="res://assets/game_background_1.png" id="1_ksc5d"]
 [ext_resource type="Shader" path="res://scenes/mainmenu/main_menu.gdshader" id="2_mpg67"]
 [ext_resource type="Texture2D" uid="uid://bqntfex6nnqmx" path="res://assets/UI_Flat_Banner01a.png" id="3_h1gmh"]
@@ -14,6 +15,7 @@ shader_parameter/blur_amount = 2.5
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jxdei"]
 
 [node name="MainMenu" type="Node2D"]
+script = ExtResource("1_48pjh")
 
 [node name="MapBackground" type="Sprite2D" parent="."]
 position = Vector2(576, 324)
@@ -48,13 +50,20 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(350, 60)
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
+selected = 1
+item_count = 3
+popup/item_0/text = "Facil"
+popup/item_1/text = "Normal"
+popup/item_1/id = 1
+popup/item_2/text = "Dificil"
+popup/item_2/id = 2
 
 [node name="Sprite2D3" type="Sprite2D" parent="MenuButtons"]
 position = Vector2(323, 209)
 scale = Vector2(21.3125, 5.66667)
 texture = ExtResource("4_2jesn")
 
-[node name="BtnPlay" type="Button" parent="MenuButtons"]
+[node name="BotonJugar" type="Button" parent="MenuButtons"]
 custom_minimum_size = Vector2(350, 60)
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
@@ -66,7 +75,7 @@ position = Vector2(321.15, 294.15)
 scale = Vector2(21.3844, 6.14167)
 texture = ExtResource("4_2jesn")
 
-[node name="BtnExit" type="Button" parent="MenuButtons"]
+[node name="BotonSalir" type="Button" parent="MenuButtons"]
 custom_minimum_size = Vector2(350, 60)
 layout_mode = 2
 theme_override_font_sizes/font_size = 32

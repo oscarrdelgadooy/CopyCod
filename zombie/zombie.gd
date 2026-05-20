@@ -26,8 +26,8 @@ func _ready() -> void:
 		ronda = wave_manager.ronda_actual
 
 	# 2. Matemáticas de escalado por ronda
-	vida_maxima = 30.0 * pow(1.15, ronda - 1)
-	daño_zombi = 10.0 * pow(1.10, ronda - 1)
+	vida_maxima = 30.0 * pow(1.15, ronda - 1) * Global.multiplicador_dificultad
+	daño_zombi = 10.0 * pow(1.10, ronda - 1) * Global.multiplicador_dificultad
 	
 	# Sincronizamos la vida inicial con la escalada
 	vida_actual = vida_maxima

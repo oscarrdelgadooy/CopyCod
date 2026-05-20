@@ -303,6 +303,8 @@ animations = [{
 
 [node name="ZombieFast" instance=ExtResource("1_1gskl")]
 collision_mask = 2
+speed = null
+attack_cooldown = null
 
 [node name="AnimatedSprite2D" parent="." index="1"]
 sprite_frames = SubResource("SpriteFrames_oxt1x")

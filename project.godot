@@ -11,8 +11,12 @@ config_version=5
 [application]
 
 config/name="CopyCod"
-run/main_scene="res://scenes/map/map.tscn"
+run/main_scene="res://scenes/mainmenu/main_menu.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
+
+[autoload]
+
+Global="*res://global.gd"
 
 [display]
 
