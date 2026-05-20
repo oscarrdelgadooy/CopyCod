@@ -207,6 +207,7 @@ offset_bottom = 8.0
 text = "Volver al menú."
 
 [node name="MarcoVida" type="Panel" parent="Interfaz"]
+layout_mode = 0
 offset_left = 37.0
 offset_top = 30.0
 offset_right = 404.0

@@ -2,8 +2,6 @@ extends CharacterBody2D
 
 # --- VARIABLES CONFIGURABLES ---
 @export var speed: float = 90.0      # (En zombie_fast cambia esto a 160.0)
-@export var health: int = 1          
-@export var damage_amount: int = 2   
 @export var attack_cooldown: float = 1.0 
 
 # --- VARIABLES DE ESTADO INTERNO ---
@@ -14,11 +12,31 @@ var is_currently_grabbing: bool = false
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var hitbox: Area2D = $Hitbox
 
+# --- SISTEMA DE ESCALADO DE ESTADÍSTICAS ---
+var vida_maxima: float = 30.0
+var vida_actual: float = 30.0
+var daño_zombi: float = 10.0
+
 func _ready() -> void:
-	# Buscamos al jugador automáticamente en el mapa
-	player = get_tree().current_scene.find_child("Player", true, false)
-	if sprite:
-		sprite.play("walk")
+	# 1. Buscamos al WaveManager asegurando su tipo
+	var wave_manager = get_tree().current_scene.find_child("WaveManager", true, false) 
+	
+	var ronda = 1
+	if wave_manager:
+		ronda = wave_manager.ronda_actual
+
+	# 2. Matemáticas de escalado por ronda
+	vida_maxima = 30.0 * pow(1.15, ronda - 1)
+	daño_zombi = 10.0 * pow(1.10, ronda - 1)
+	
+	# Sincronizamos la vida inicial con la escalada
+	vida_actual = vida_maxima
+		
+	# 3. ¡SOLUCIÓN AL MOVIMIENTO! 
+	# Si la variable 'player' no viene asignada desde fuera, la buscamos nosotros en el mapa
+	if not player:
+		player = get_tree().current_scene.find_child("Player", true, false) as CharacterBody2D
+
 
 func _physics_process(_delta: float) -> void:
 	if is_dead or is_currently_grabbing:
@@ -75,18 +93,23 @@ func start_grab_sequence() -> void:
 	# Duración de la animación (1 segundo agarrado)
 	await get_tree().create_timer(1.0).timeout
 	
-	# Aplicamos el daño si seguimos vivos
+	# Aplicamos el daño si seguimos vivos (usando la variable escalada 'daño_zombi')
 	if not is_dead and player:
 		if player.has_method("take_grab_damage"):
-			player.take_grab_damage(damage_amount)
+			# Convertimos a int por si tu función del jugador espera un entero estricto
+			player.take_grab_damage(int(daño_zombi))
 			
 	is_currently_grabbing = false
 
 # --- RECIBIR DAÑO Y MORIR ---
-func take_damage(amount: int) -> void:
+# Cambiado para que tus balas resten de la vida flotante escalada (vida_actual)
+func take_damage(amount: float) -> void:
 	if is_dead: return
-	health -= amount
-	if health <= 0:
+	
+	vida_actual -= amount
+	print("Zombi herido. Vida restante: ", vida_actual)
+	
+	if vida_actual <= 0:
 		die()
 
 func die() -> void:
@@ -97,10 +120,13 @@ func die() -> void:
 	if is_currently_grabbing and player and player.is_grabbed:
 		player.is_grabbed = false
 	
-	# Damos las monedas
+	# Damos las monedas y sumamos la Kill de forma segura
 	if player: 
-		player.coins += 2 
-		player.kills += 1
+		if "coins" in player:
+			player.coins += 2 
+		if "kills" in player:
+			player.kills += 1
+		print("¡Zombi muerto! Monedas: ", player.coins, " | Kills: ", player.kills)
 	
 	# Borramos las colisiones para que no estorben en el suelo
 	if has_node("CollisionShape2D"): $CollisionShape2D.queue_free()

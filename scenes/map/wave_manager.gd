@@ -1,4 +1,4 @@
-extends Node
+extends Node2D
 
 @export var zombie_scene: PackedScene 
 @export var zombie_rapido_scene: PackedScene

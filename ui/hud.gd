@@ -61,7 +61,9 @@ func _process(delta: float) -> void:
 			label_velocidad.text = "VEL: " + str(jugador.speed)
 			
 		if label_cadencia:
-			label_cadencia.text = "Cadencia " + str(jugador.shoot_cooldown * 100)
+			# Muestra las balas que puedes disparar por segundo (1 dividido entre el cooldown)
+			var balas_por_segundo = 1.0 / jugador.shoot_cooldown
+			label_cadencia.text = "CADENCIA: %.1f b/s" % balas_por_segundo
 			
 		if label_municion:
 			label_municion.text = str(jugador.current_ammo) + " / " + str(jugador.MAX_AMMO)
