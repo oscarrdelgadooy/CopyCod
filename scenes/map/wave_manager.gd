@@ -9,7 +9,9 @@ extends Node
 
 @onready var mercader = get_parent().find_child("Mercader", true, false)
 @onready var tienda_ui = get_parent().find_child("TiendaUI", true, false)
-@onready var label_ronda = get_parent().find_child("LabelRonda", true, false)
+
+# Buscamos el nodo principal de tu interfaz para mandarle la orden de animar
+@onready var huds = get_parent().find_child("Hud", true, false) 
 
 var ronda_actual: int = 0
 var zombies_por_spawnear: int = 0
@@ -26,6 +28,8 @@ func _ready():
 		tienda_ui.visible = false
 	
 	prep_timer.one_shot = true
+	
+	# Cortesía de 2 segundos de espera al iniciar la partida antes de lanzar la Ronda 1
 	await get_tree().create_timer(2.0).timeout
 	iniciar_nueva_ronda()
 
@@ -36,18 +40,18 @@ func iniciar_nueva_ronda():
 	
 	print("--- INICIANDO RONDA ", ronda_actual, " ---")
 	
-	if label_ronda:
-		label_ronda.text = "RONDA " + str(ronda_actual)
-		label_ronda.visible = true
-		await get_tree().create_timer(3.0).timeout
-		label_ronda.visible = false
+	# --- LLAMADA AL HUD ANIMADO (DURA 3 SEGUNDOS EN PANTALLA) ---
+	if huds and huds.has_method("animar_nueva_ronda"):
+		huds.animar_nueva_ronda(ronda_actual)
 	
+	# El mercader y la tienda se cierran al empezar la acción
 	if mercader and mercader.has_method("desaparecer"): 
 		mercader.desaparecer()
 			
 	if tienda_ui: 
 		tienda_ui.visible = false
 	
+	# Los zombis empiezan a salir ya mismo en segundo plano mientras se ve el cartel
 	spawn_timer.start()
 
 func _on_spawn_timer_timeout():
@@ -84,7 +88,7 @@ func spawn_un_zombi():
 
 func _on_zombi_destruido():
 	zombies_vivos -= 1
-	print("Zombi eliminado. Vivos restantes: ", zombies_vivos)	
+	print("Zombi eliminado. Vivos restantes: ", zombies_vivos)    
 	
 	if zombies_por_spawnear <= 0 and zombies_vivos <= 0:
 		iniciar_tiempo_compra()

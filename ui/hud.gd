@@ -3,51 +3,67 @@ extends CanvasLayer
 @onready var jugador = get_tree().current_scene.find_child("Player", true, false)
 @onready var wave_manager = get_tree().current_scene.find_child("WaveManager", true, false)
 
-# Referencias a tus nuevos nodos visuales
-@onready var barra_vida = $Interfaz/MarcoVida/BarraVida
+@onready var barra_vida = $MarcoVida/BarraVida
 @onready var barra_municion = $BarraMunicion
 @onready var label_monedas = $Interfaz/ContenedorMonedas/LabelMonedas
-@onready var label_ronda = $Interfaz/LabelRonda
+@onready var icono_moneda = $Interfaz/ContenedorMonedas/EspacioIcono/IconoMoneda
+@onready var label_anuncio_ronda = $Interfaz/LabelAnuncioRonda
+
+# Guardamos las monedas actuales para saber cuándo cambia el valor y animar
+var monedas_visuales: int = 0
 
 func _ready() -> void:
-	if barra_vida:
-		print("HUD: ¡He encontrado la barra de vida! Su nombre es: ", barra_vida.name)
-		print("HUD: Su valor actual es: ", barra_vida.value)
-	else:
-		print("HUD: ¡ERROR! No encuentro ninguna barra de vida.")
 	if jugador:
-		barra_vida.value = jugador.current_health
-		# Comprobamos si el nodo existe antes de intentar cambiarle el valor
 		if barra_vida:
 			barra_vida.max_value = jugador.max_health
 			barra_vida.value = jugador.current_health
-		else:
-			push_error("¡Cuidado! No encontré el nodo BarraVida en la escena.")
-			
-		if barra_municion:
-			barra_municion.max_value = jugador.MAX_AMMO
-			barra_municion.value = jugador.current_ammo
-		else:
-			push_error("¡Cuidado! No encontré el nodo BarraMunicion en la escena.")
+		monedas_visuales = jugador.coins
+		label_monedas.text = str(monedas_visuales)
+	
+	# Forzamos que el cartel empiece invisible nada más cargar el juego
+	if label_anuncio_ronda:
+		label_anuncio_ronda.modulate.a = 0.0
 
 func _process(_delta: float) -> void:
 	if jugador:
-		# Actualizamos las barras de forma fluida
-		barra_vida.value = jugador.current_health
-		barra_municion.value = jugador.current_ammo
+		if barra_vida:
+			barra_vida.value = jugador.current_health
+		if barra_municion:
+			barra_municion.value = jugador.current_ammo
 		
-		# Actualizamos texto de monedas
-		label_monedas.text = str(jugador.coins)
+		# Si las monedas del jugador cambian, lanzamos la animación del latido
+		if jugador.coins != monedas_visuales:
+			monedas_visuales = jugador.coins
+			actualizar_monedas_con_animacion()
 
-	if wave_manager:
-		label_ronda.text = "RONDA: " + str(wave_manager.ronda_actual)
-		
-# Llámalo desde el script del jugador cuando reciba daño
-func mostrar_daño():
+# --- ANIMACIÓN DEL ICONO DE LA MONEDA ---
+func actualizar_monedas_con_animacion() -> void:
+	label_monedas.text = str(monedas_visuales)
 	var tween = create_tween()
-	# Guardamos el color rojo original que le hayas puesto en el editor
-	var color_original = Color(1, 0, 0) # Ajusta este color al rojo exacto de tu barra
-	# Parpadea a blanco brillante/dorado instantáneamente
-	barra_vida.modulate = Color(2, 2, 2) # Multiplicar por encima de 1 da un efecto de brillo (HDR)
-	# Vuelve suavemente a su color rojo en 0.2 segundos
-	tween.tween_property(barra_vida, "modulate", color_original, 0.2)
+	tween.parallel().tween_property(icono_moneda, "scale", Vector2(1.3, 1.3), 0.1).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.parallel().tween_property(icono_moneda, "rotation", deg_to_rad(10), 0.1)
+	tween.parallel().tween_property(icono_moneda, "scale", Vector2(1.0, 1.0), 0.15)
+	tween.parallel().tween_property(icono_moneda, "rotation", 0.0, 0.15)
+
+# --- ANIMACIÓN DE 3 SEGUNDOS PARA LA RONDA ---
+func animar_nueva_ronda(numero_ronda: int) -> void:
+	print("!!! EL HUD RECIBE LA ORDEN DE ANIMAR LA RONDA: ", numero_ronda) # <--- AÑADE ESTO
+	if not label_anuncio_ronda: 
+		return
+	
+	# Cambiamos el texto al de la ronda actual
+	label_anuncio_ronda.text = "RONDA " + str(numero_ronda)
+	
+	# Aseguramos que empiece invisible
+	label_anuncio_ronda.modulate.a = 0.0
+	
+	var tween = create_tween()
+	
+	# 1. APARECE: Se vuelve opaco de forma suave en 0.3 segundos
+	tween.tween_property(label_anuncio_ronda, "modulate:a", 1.0, 0.3)
+	
+	# 2. ESPERA: Se queda estático en pantalla durante 2.4 segundos
+	tween.tween_interval(2.4)
+	
+	# 3. DESAPARECE: Se desvanece por completo en 0.3 segundos (Total: 3.0 segundos)
+	tween.tween_property(label_anuncio_ronda, "modulate:a", 0.0, 0.3)
